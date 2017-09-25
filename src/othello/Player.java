@@ -10,8 +10,6 @@ package othello;
  * @author matt
  */
 
-
-
 public class Player {
 
     

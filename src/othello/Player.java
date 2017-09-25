@@ -9,15 +9,11 @@ package othello;
  *
  * @author matt
  */
-public class Player {
-    String B;
-    String W;
 
-    String getMyColor(char color){
-        if (color == 'B'){
-            return "Black";
-        }else if (color == 'W'){
-            return "White";}
-        return "Not a correct color";
+
+
+public class Player {
+
+    
     }
-}
+

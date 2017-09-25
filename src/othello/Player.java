@@ -9,9 +9,29 @@ package othello;
  *
  * @author matt
  */
-
 public class Player {
 
-    
+    String color;
+
+    Player() {
+        this.color = new String();
+    }//end constructor
+
+    public Player playerColor(String str) {
+        char[] args = str.toCharArray();
+        while (args[0] == 'I') {
+            if (args[1] == 'B') {
+                this.color = "Black";
+            } else if (args[1] == 'W') {
+                this.color = "White";
+            }
+            return null;
+        }//end while loop
+        return null;
+    }//end playerColor
+
+    public String getPlayerColor() {
+        return this.color;
     }
 
+}

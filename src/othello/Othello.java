@@ -5,51 +5,48 @@
  */
 package othello;
 
-
-
-
-
 /**
  *
  * @author matt
  */
 public class Othello {
-    public final int ME = 1;
-    public final int OPPONENT = -1;
-    public final int BORDER = -2;
-    public final int EMPTY = 0;
-    
+
+    public static int ME = 1;
+    public static int OPPONENT = -1;
+    public static int BORDER = -2;
+    public static int EMPTY = 0;
+
     public static Board gameBoard;
-    public Player currentPlayer;// = int(1,-1);
-    //myColor = 
-    
-   
+    public static int currentPlayer;// = int(1,-1);
+    public static String myColor;// = currentPlayer.getPlayerColor();
+    public static Player player;
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       
+
         // TODO code application logic here
-    //myColor = getMyColor();
-    
-    gameBoard = new Board();
-    if (myColor == Black){
-        currentPlayer = ME;
-    }else{
-        currentPlayer = OPPONENT;
-    }
-    while(!gameBoard.gameOver()){
-        if (currentPlayer == ME){
-            move = gameBoard.getMyMove();
-        }else{
-            move = gameBoard.getOpponent();
+        myColor = player.getPlayerColor();
+
+        gameBoard = new Board();
+        if (myColor == "Black") {
+            currentPlayer = ME;
+        } else {
+            currentPlayer = OPPONENT;
         }
-        gameBoard.applyMove(player, move);
-        printBoard(gameBoard)
-        currentPlayer = -1 * currentPlayer //switch players
-        
-    }//end while loop
-    printScore();
+        while (!gameBoard.gameOver()) {
+            if (currentPlayer == ME) {
+                move = gameBoard.getMyMove();
+            } else {
+                move = gameBoard.getOpponent();
+            }
+            gameBoard.applyMove(player, move);
+            printBoard(gameBoard)
+            currentPlayer = -1 * currentPlayer; //switch players
+
+        }//end while loop
+        printScore();
     }//end main
-    
+
 }

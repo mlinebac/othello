@@ -6,6 +6,7 @@
 package othello;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -14,37 +15,83 @@ import java.util.ArrayList;
 public class Board {
 
     private final int BOARD_SIZE = 10;
-    ArrayList moveList = new ArrayList();
-    int[][] gameBoard = new int[BOARD_SIZE][BOARD_SIZE];
-    //all possible move directions
-    Move up = new Move(0, -1);
-    Move down = new Move(0, 1);
-    Move right = new Move(1, 0);
-    Move left = new Move(-1, 0);
-    Move upRight = new Move(1, -1);
-    Move upLeft = new Move(-1, 1);
-    Move downRight = new Move(1, 1);
-    Move downLeft = new Move(-1, 1);
-    //moveList = {up, down, right, left, upRight, upLeft, downRight, downLeft};
+    int[][] board;
+
+    //all possible directions player may move
+    public final Move up = new Move(0, -1);
+    public final Move down = new Move(0, 1);
+    public final Move right = new Move(1, 0);
+    public final Move left = new Move(-1, 0);
+    public final Move upRight = new Move(1, -1);
+    public final Move upLeft = new Move(-1, -1);
+    public final Move downRight = new Move(1, 1);
+    public final Move downLeft = new Move(-1, 1);
+    //array of all possible moves
+    final Move directions[] = {up, down, right, left,
+        upRight, upLeft, downRight, downRight};
 
     public Board() {
-
-    }
-
-    public Board(int[][] newBoard) {
-        this.gameBoard = newBoard;
+        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 1; i < BOARD_SIZE - 1; i++) {
+            for (int j = 1; j < BOARD_SIZE - 1; j++) {
+                this.board[i][j] = Othello.EMPTY;// initialize all cells to EMPTY
+            }
+        }
     }
 
     public Board(Board oldBoard) {
-        this.gameBoard = oldBoard.gameBoard;
+        this.board = oldBoard.board;
     }
 
-    public Board(Player color) {
+    public Board(Player player) {
+       this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            board[i][0] = Othello.BORDER;
+            board[0][i] = Othello.BORDER;
+            board[BOARD_SIZE - 1][i] = Othello.BORDER;
+            board[i][BOARD_SIZE - 1] = Othello.BORDER;
+        }
+
+        if ("Black".equals(player.getPlayerColor())) {
+            board[4][4] = Othello.OPPONENT; //White
+            board[5][4] = Othello.ME; //Black
+            board[4][5] = Othello.ME; //Black
+            board[5][5] = Othello.OPPONENT; //White
+        } else {
+            board[4][4] = Othello.ME; //Black
+            board[5][4] = Othello.OPPONENT; //White
+            board[4][5] = Othello.OPPONENT; //White
+            board[5][5] = Othello.ME; //Black
+        }
 
     }
 
-    public ArrayList generateMoves(Player player) {
-        return moveList;
+    public boolean isLegalMove(Player color, Move move) {
+
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+
+            }
+        }
+        return true;
+    }
+
+    //generates a list of valid moves a player can make
+    public ArrayList<Move> generateMoves(Player player) {
+        ArrayList<Move> validMoves = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+
+                Move possibleMove = new Move(i, j);
+                //test if the move is legal 
+                boolean isValid = isLegalMove(player, possibleMove);
+                //if move is legal add it the list of valid moves
+                if (isValid) {
+                    validMoves.add(possibleMove);
+                }
+            }
+        }
+        return validMoves;
     }
 
     public int applyMove(Player player, Move move) {
@@ -55,8 +102,16 @@ public class Board {
         return 0;
     }
 
-    @Override
-    public String toString() {
-        return null;
+    
+    public void  printBoard() {
+        for (int[] x : board) {
+        {
+          for (int y : x)  {
+              System.out.print(y + " ");
+          }
+          System.out.println();
+            }
+            
+        }
     }
-}
+}//end Board class

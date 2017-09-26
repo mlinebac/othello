@@ -16,22 +16,15 @@ public class Player {
     Player() {
         this.color = new String();
     }//end constructor
-
-    public Player playerColor(String str) {
-        char[] args = str.toCharArray();
-        while (args[0] == 'I') {
-            if (args[1] == 'B') {
-                this.color = "Black";
-            } else if (args[1] == 'W') {
-                this.color = "White";
-            }
-            return null;
-        }//end while loop
-        return null;
+    
+    public Player(String str) {
+      this.color = str;
+        
+       
     }//end playerColor
 
     public String getPlayerColor() {
-        return this.color;
+        return color;
     }
 
 }

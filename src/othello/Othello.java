@@ -25,16 +25,22 @@ public class Othello {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        // TODO code application logic here
+        myColor = "Black";
+        player = new Player(myColor);
+       //gameBoard = new Board();
+        gameBoard = new Board(player);
+        gameBoard.printBoard();
+        
+        
         myColor = player.getPlayerColor();
 
-        gameBoard = new Board();
         if (myColor == "Black") {
             currentPlayer = ME;
         } else {
             currentPlayer = OPPONENT;
         }
+        
+        /*
         while (!gameBoard.gameOver()) {
             if (currentPlayer == ME) {
                 move = gameBoard.getMyMove();
@@ -47,6 +53,8 @@ public class Othello {
 
         }//end while loop
         printScore();
-    }//end main
+*/
+
+}//end main
 
 }

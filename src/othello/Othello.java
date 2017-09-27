@@ -13,7 +13,6 @@ public class Othello {
 
     public static int ME = 1;
     public static int OPPONENT = -1;
-    public static int BORDER = -2;
     public static int EMPTY = 0;
 
     public static Board gameBoard;
@@ -27,14 +26,13 @@ public class Othello {
     public static void main(String[] args) {
         myColor = "Black";
         player = new Player(myColor);
-       //gameBoard = new Board();
         gameBoard = new Board(player);
-        gameBoard.printBoard();
+        System.out.print(gameBoard.toString());
         
         
         myColor = player.getPlayerColor();
 
-        if (myColor == "Black") {
+        if (myColor == "B") {
             currentPlayer = ME;
         } else {
             currentPlayer = OPPONENT;

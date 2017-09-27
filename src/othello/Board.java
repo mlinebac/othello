@@ -13,7 +13,7 @@ import java.util.Arrays;
  * @author matt
  */
 public class Board {
-
+    private final int BOARDER = -2;
     private final int BOARD_SIZE = 10;
     int[][] board;
 
@@ -30,38 +30,34 @@ public class Board {
     final Move directions[] = {up, down, right, left,
         upRight, upLeft, downRight, downRight};
 
-    public Board() {
-        this.board = new int[BOARD_SIZE][BOARD_SIZE];
-        for (int i = 1; i < BOARD_SIZE - 1; i++) {
-            for (int j = 1; j < BOARD_SIZE - 1; j++) {
-                this.board[i][j] = Othello.EMPTY;// initialize all cells to EMPTY
-            }
-        }
-    }
-
     public Board(Board oldBoard) {
         this.board = oldBoard.board;
     }
 
-    public Board(Player player) {
-       this.board = new int[BOARD_SIZE][BOARD_SIZE];
+    public Board(Player player){
+        this.board = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 1; i < BOARD_SIZE - 1; i++) {
+            for (int j = 1; j < BOARD_SIZE - 1; j++) {
+                this.board[i][j] = '-';// initialize all cells to EMPTY
+            }
+        }
         for (int i = 0; i < BOARD_SIZE; i++) {
-            board[i][0] = Othello.BORDER;
-            board[0][i] = Othello.BORDER;
-            board[BOARD_SIZE - 1][i] = Othello.BORDER;
-            board[i][BOARD_SIZE - 1] = Othello.BORDER;
+            board[i][0] = BOARDER;
+            board[0][i] = BOARDER;
+            board[BOARD_SIZE - 1][i] = BOARDER;
+            board[i][BOARD_SIZE - 1] = BOARDER;
         }
 
         if ("Black".equals(player.getPlayerColor())) {
-            board[4][4] = Othello.OPPONENT; //White
-            board[5][4] = Othello.ME; //Black
-            board[4][5] = Othello.ME; //Black
-            board[5][5] = Othello.OPPONENT; //White
+            board[4][4] = 'W'; //White
+            board[5][4] = 'B'; //Black
+            board[4][5] = 'B'; //Black
+            board[5][5] = 'W'; //White
         } else {
-            board[4][4] = Othello.ME; //Black
-            board[5][4] = Othello.OPPONENT; //White
-            board[4][5] = Othello.OPPONENT; //White
-            board[5][5] = Othello.ME; //Black
+            board[4][4] = 'B'; //Black
+            board[5][4] = 'W'; //White
+            board[4][5] = 'W'; //White
+            board[5][5] = 'B'; //Black
         }
 
     }
@@ -103,7 +99,17 @@ public class Board {
     }
 
     
-    public void  printBoard() {
+    public String toString() {
+        String str = "";
+        for (int row = 1; row < board.length-1; row++){
+            for(int col = 1; col < board.length-1; col++){
+                str += " " + (char)board[row][col];
+            }
+            str += "\r\n";
+        }
+        return str;
+        
+        /*
         for (int[] x : board) {
         {
           for (int y : x)  {
@@ -113,5 +119,6 @@ public class Board {
             }
             
         }
+        */
     }
 }//end Board class

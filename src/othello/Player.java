@@ -11,20 +11,17 @@ package othello;
  */
 public class Player {
 
-    String color;
-
-    Player() {
-        this.color = new String();
-    }//end constructor
+    String playerColor;
     
     public Player(String str) {
-      this.color = str;
-        
-       
+      String [] strArray = str.split(" ");
+      this.playerColor = strArray[1];
+      
     }//end playerColor
 
     public String getPlayerColor() {
-        return color;
+        
+        return playerColor;
     }
 
 }

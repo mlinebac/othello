@@ -14,7 +14,7 @@ public class Move {
 
     int x;
     int y;
-   
+    int color;
     
     
     public Move() {
@@ -33,12 +33,12 @@ public class Move {
 
     public Move(String str) {
         char[] charArray = str.toCharArray();
-        /*if (charArray[0] == 'B'){
+        if (charArray[0] == 'B'){
             this.color = -1;
         }else{
             this.color = 1;
         }
-        */
+        
         this.x = Character.getNumericValue(charArray[2]) - 9;
         this.y = Character.getNumericValue(charArray[4]);
     }//end Move constructor

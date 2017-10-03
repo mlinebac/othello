@@ -27,6 +27,7 @@ public class Othello {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        String strMove;
         Scanner scan = new Scanner(System.in);
         System.out.println("Please choose your color");
         String str = scan.nextLine();
@@ -35,26 +36,36 @@ public class Othello {
         gameBoard = new Board(myColor);
         
         if (myColor.equals("B")) {
-            currentPlayer = ME;//Black
+            currentPlayer = ME;
         } else {
-            currentPlayer = OPPONENT;//White
+            currentPlayer = OPPONENT;
         }
+        
         System.out.println(myColor);
         System.out.println("Black goes first");
-        String strMove;
-            
+        System.out.print(gameBoard.toString());
+        
+        if (currentPlayer != ME) {
+            System.out.println("First Move: ");
+            strMove = scan.nextLine();
+            move = gameBoard.getMyMove(strMove);
+            gameBoard.placeMarker(ME, move);
+            System.out.println(gameBoard.toString());
+        }
         while (!gameBoard.gameOver()) {
             System.out.println("Enter you next move");
             
             if (currentPlayer == ME) {
+                System.out.println("My Turn");
                 strMove = scan.nextLine();
                 move = gameBoard.getMyMove(strMove);
                 //printMove();
             } else {
+                System.out.println("Opponent's Turn");
                 strMove = scan.nextLine();
                 move = gameBoard.getOpponent(strMove);
             }
-            gameBoard.applyMove(currentPlayer, move);
+            gameBoard.placeMarker(currentPlayer, move);
             System.out.print(gameBoard.toString());
             currentPlayer = -1 * currentPlayer; //switch players
 

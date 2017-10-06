@@ -11,17 +11,28 @@ package othello;
  */
 public class Player {
 
-    String playerColor;
-    
+    int playerColor;
+    int optColor;
+
     public Player(String str) {
-      String [] strArray = str.split(" ");
-      this.playerColor = strArray[1];
-      
+        String[] strArray = str.split(" ");
+        // this.color = strArray[1];
+        if (strArray[1].equals("B")) {
+            this.playerColor = 1;
+            this.optColor = -1;
+        } else {
+            this.playerColor = -1;
+            this.optColor = 1;
+        }
     }//end playerColor
 
-    public String getPlayerColor() {
-        
+    public int getPlayerColor() {
         return playerColor;
+    }
+
+    public int getOpponentColor() {
+        
+        return optColor;
     }
 
 }

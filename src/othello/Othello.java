@@ -5,6 +5,8 @@
  */
 package othello;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -15,63 +17,58 @@ public class Othello {
 
     public final static int ME = 1;
     public final static int OPPONENT = -1;
-    public final static int EMPTY = 0;
-
+    
     public static Board gameBoard;
     public static int currentPlayer;// = int(1,-1);
-    public static String myColor;
+    public static int myColor;
+    
     public static Player player;
     public static Move move;
-    //public static Move move;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         String strMove;
         Scanner scan = new Scanner(System.in);
-        System.out.println("Please choose your color");
+        System.out.println("C Please choose your color");
         String str = scan.nextLine();
         player = new Player(str);//intialize player I B or I W only!!!
         myColor = player.getPlayerColor();
         gameBoard = new Board(myColor);
-        
-        if (myColor.equals("B")) {
-            currentPlayer = ME;
-        } else {
-            currentPlayer = OPPONENT;
-        }
-        
-        System.out.println(myColor);
-        System.out.println("Black goes first");
+       if (myColor == 1){
+           currentPlayer = ME;
+       }else
+           currentPlayer = OPPONENT;
+       
+        //printing out my color to check if I B or I W is correct
+        System.out.println("C my color is: " + myColor);
+        //printing out game board before moves have been made
         System.out.print(gameBoard.toString());
-        
-        if (currentPlayer != ME) {
-            System.out.println("First Move: ");
-            strMove = scan.nextLine();
-            move = gameBoard.getMyMove(strMove);
-            gameBoard.placeMarker(ME, move);
-            System.out.println(gameBoard.toString());
-        }
+
+        //loop through while alternating moves until game is over
         while (!gameBoard.gameOver()) {
-            System.out.println("Enter you next move");
-            
+            Move aiMove;
             if (currentPlayer == ME) {
-                System.out.println("My Turn");
-                strMove = scan.nextLine();
-                move = gameBoard.getMyMove(strMove);
-                //printMove();
+                ArrayList<Move> myList = gameBoard.generateMoves(myColor);
+                aiMove = myList.get(0);
             } else {
-                System.out.println("Opponent's Turn");
+                System.out.println("C Opponent's Turn" + "\nEnter your next move:");
+                //scan for opponents turn
                 strMove = scan.nextLine();
-                move = gameBoard.getOpponent(strMove);
+                //get opponents move 
+                aiMove = new Move(strMove);
             }
-            gameBoard.placeMarker(currentPlayer, move);
+            //apply move to gameboard
+            System.out.println("C This is the current player:" + currentPlayer);
+            gameBoard.applyMove(currentPlayer, aiMove);
+            //print updated gameboard with move applied
             System.out.print(gameBoard.toString());
-            currentPlayer = -1 * currentPlayer; //switch players
-
+            System.out.println("\nC player moved to: " + aiMove.toString() + "\n");
+            //switch player turn 
+            currentPlayer = currentPlayer * -1;
         }//end while loop
-
-        // printScore();
+        //print out players score when game is over
+        gameBoard.printScore(player);
     }//end main
 
 }

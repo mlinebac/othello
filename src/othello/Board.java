@@ -6,41 +6,41 @@
 package othello;
 
 import java.util.ArrayList;
-
 /**
  *
  * @author Matt Lineback
  */
 public class Board {
-    
-    //all possible directions player may move
-    public final Move up = new Move(0, -1);
-    public final Move down = new Move(0, 1);
-    public final Move right = new Move(1, 0);
-    public final Move left = new Move(-1, 0);
-    public final Move upRight = new Move(1, -1);
-    public final Move upLeft = new Move(-1, -1);
-    public final Move downRight = new Move(1, 1);
-    public final Move downLeft = new Move(-1, 1);
-    //array of all possible moves
-    final Move directions[] = {up, down, right, left,
-        upRight, upLeft, downRight, downRight};
-    
-    
-    
-    
-    
+
+    //all possible move directions
+    public final Move up = new Move(0, -1); // up
+    public final Move down = new Move(0, 1); // down
+    public final Move left = new Move(-1, 0); // left
+    public final Move right = new Move(1, 0); // right
+    public final Move upLeft = new Move(-1, -1); // up and left
+    public final Move upRight = new Move(1, -1); // up and right
+    public final Move downLeft = new Move(-1, 1); // down and left
+    public final Move downRight = new Move(1, 1); // down and right
+    //array of all directions
+    final Move directions[] = {up, down, left, right, upLeft, upRight,
+        downLeft, downRight};
+
+    char playerColor;
+    char oppponentColor;
     private final int BOARDER = -2;
     private final int BOARD_SIZE = 10;
-    private final int BLACK = 1;
-    private final int WHITE = -1;
     private final int EMPTY = 0;
     int[][] board;
+
+    //constructor for empty board;
     public Board() {
         board = new int[BOARD_SIZE][BOARD_SIZE];
     }
 
-    public Board(String color) {
+    //constructor that takes a player color and intiates board with boarders and 
+    //players at starting positions
+    public Board(int color) {
+
         this.board = new int[BOARD_SIZE][BOARD_SIZE];
         for (int i = 1; i < BOARD_SIZE - 1; i++) {
             for (int j = 1; j < BOARD_SIZE - 1; j++) {
@@ -53,18 +53,32 @@ public class Board {
             board[BOARD_SIZE - 1][i] = BOARDER;
             board[i][BOARD_SIZE - 1] = BOARDER;
         }
-        board[4][4] = -1; //white
-        board[5][4] = 1; //black
-        board[4][5] = 1; //black
-        board[5][5] = -1; //white
+        //initial starting position of board and pieces
+        if (color == 1) {
+            playerColor = 'B';
+            oppponentColor = 'W';
+            board[4][4] = -1;
+            board[5][4] = 1;//me
+            board[4][5] = 1; //me
+            board[5][5] = -1;
+        } else {
+            playerColor = 'W';
+            oppponentColor = 'B';
+            board[4][4] = 1;
+            board[5][4] = -1; //me
+            board[4][5] = -1; //me
+            board[5][5] = 1;
+        }
     }
 
+    //get new version of board by taking old state and applying it to new one
     public Board getCopy() {
         Board clone = new Board();
         clone.setState(getState());
         return clone;
     }
 
+    //get current state of board and returns it
     public int[][] getState() {
         int[][] state = new int[BOARD_SIZE][BOARD_SIZE];
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -75,35 +89,13 @@ public class Board {
         return state;
     }
 
+    //set current state of board 
     public void setState(int[][] state) {
         board = state;
     }
 
-    public boolean isLegalMove(Move move, int color) {
-        int x = move.getX();
-        int y = move.getY();
-
-        if (getMarker(x, y) == EMPTY) {
-            for (int i = -1; i < 2; i++) {
-                for (int j = -1; j < 2; j++) {
-                    int posX = x + i;
-                    int posY = y + j;
-                    int current = getMarker(posX, posY);
-                    while (current != color && current != EMPTY && current != BOARDER) {
-                        posX += i;
-                        posY += j;
-                        current = getMarker(posX, posY);
-                        if (current == color) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-
-        /*
+    //check if move is legal 
+    public boolean isLegalMove(int color, Move move) {
         boolean legal = false;
         int opponent = -1 * color;
         int currentPlayer = color;
@@ -115,22 +107,27 @@ public class Board {
         if (board[y][x] != EMPTY) {
             return false;
         } else {
-            for (int i = 0; i < directions.length; i++) {
-                Move direction = directions[i];
-
+            //check in all directions by applying list of moves
+            for (Move direction : directions) {
                 int dirX = direction.getX();
                 int dirY = direction.getY();
                 int jump = 2;
 
                 try {
+
                     if (board[y + dirY][x + dirX] == opponent) {
+                        //do this while jump does not got out of bounds
                         while ((y + (jump * dirY)) > -1
                                 && (y + (jump * dirY)) < 8
                                 && (x + (jump * dirX)) < 8
                                 && (x + (jump * dirX)) > -1) {
+                            //if jump does not jump over empty or the players same color
+                            //return is a legal move
                             if (board[y + jump * dirY][x + jump * dirX] != EMPTY) {
                                 if (board[y + jump * dirY][x + jump * dirX] == currentPlayer) {
                                     return true;
+                                    //if jump does jump over players same color
+                                    //break out of while loop
                                 } else if (board[y + jump * dirY][x + jump * dirX] == EMPTY) {
                                     break;
                                 }
@@ -144,121 +141,135 @@ public class Board {
                 } catch (Exception e) {
 
                 }
-            }//end for loop of directions
+
+            } //end for loop of directions
         }//end if board is not empty
 
         return legal;
-         */
-    }//end of isLegalMove method
+
+    }//end isLegalMove method
 
     //generates a list of valid moves a player can make
     public ArrayList<Move> generateMoves(int color) {
         ArrayList<Move> validMoves = new ArrayList<>();
+        //check the entire board for legal moves a player can make
+
         for (int i = 1; i < board.length - 1; i++) {
             for (int j = 1; j < board.length - 1; j++) {
-                Move move = new Move(i, j);
-                if (isLegalMove(move, color)) {
+                Move move = new Move(color, i, j);
+                //if it's a legal move add it to the list of legal moves
+                if (isLegalMove(color, move)) {
                     validMoves.add(move);
                 }
             }
         }
+        //return list of legal moves for player
+        //System.out.print(Arrays.toString(validMoves.toArray()));
         return validMoves;
     }
 
-    public Board applyMove(int color, Move move) {
-        //if (isLegalMove(move, color) != true) {
-        // System.out.println("illegal move");
-        //} else {
-        return placeMarker(color, move);
-        //}
+    //places marker at this moves coordinates with updated board 
+    public void applyMove(int currentPlayer, Move move) {
+        placeMarker(currentPlayer, move);
     }
+    //returns updated board if move was to be made
 
     public Board placeMarker(int color, Move move) {
-
-        if (isLegalMove(move, color) != true) {
+        //check to see if move is legal or not
+        if (isLegalMove(color, move) != true) {
             System.out.println("\nillegal move!!!\n");
+            return this;
         }
+        //get new instance of board
         Board newBoard;
         newBoard = this.getCopy();
         int x = move.getX();
         int y = move.getY();
-        this.setMarker(color, x, y);
-
+        //set marker location on new board
+        setMarker(color, x, y);
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                int square = newBoard.getMarker(x + i, y + j);
+                int space = newBoard.getMarker(x + i, y + j);
                 int k = x + i;
                 int l = y + j;
-                while (square != EMPTY && square != color
-                        && square != BOARDER) {
+                while (space != EMPTY && space != color
+                        && space != BOARDER) {
                     k += i;
                     l += j;
-                    square = newBoard.getMarker(k, l);
+                    space = newBoard.getMarker(k, l);
                 }
-                if (square == color) {
+                if (space == color) {
                     k -= i;
                     l -= j;
-                    square = newBoard.getMarker(k, l);
-                    while (square != EMPTY && square != color
-                            && square != BOARDER) {
-                        newBoard.setMarker(color, k, l);
+                    space = newBoard.getMarker(k, l);
+                    while (space != EMPTY && space != color
+                            && space != BOARDER) {
+                        setMarker(color, k, l);//flips marker
                         k -= i;
                         l -= j;
-                        square = newBoard.getMarker(k, l);
+                        space = newBoard.getMarker(k, l);
+
                     }
                 }
             }
         }
 
         return newBoard;
+
     }
 
-    public void setMarker(int markerColor, int x, int y) {
+    //put marker at this coordinate 
+    public void setMarker(int marker, int x, int y) {
         if (!(x <= BOARDER || y <= BOARDER)) {
-        this.board[y][x] = markerColor;
-        }else 
-        System.out.println("Not a move!!!");
+            this.board[y][x] = marker;
+        } else {
+            System.out.println("Not a move!!!");
+        }
     }
-
+    
+    //get marker at this coordinate and return it 
     public int getMarker(int x, int y) {
         int markerColor = board[y][x];
         return markerColor;
     }
-
-    //need to finish this method
-    public Move getMyMove(String str) {
-        Move move = new Move(str);
-        return move;
-    }
-
-    //need to finish this method
-    public Move getOpponent(String str) {
-        Move move = new Move(str);
-        return move;
-    }
-
+    
+    //method needs to be finished!!!
     public int evaluate() {
         return 0;
     }
 
+    //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
-        //Player player = Othello.player;
-        //Move move = getMyMove();
-        //if (isLegalMove(player, move) == true){
-        return false;
-        // }else
-        // return true;
-
+        return false; //returning false for now until method is finished;
     }
 
+    //checks the board and counts num of player pieces on the board and returns count sum;
+    public int getPlayerScore(Player player) {
+        int score = 0;
+        for (int row = 1; row < board.length - 1; row++) {
+            for (int col = 1; col < board.length - 1; col++) {
+                if (board[row][col] == player.playerColor) {
+                    score++;
+                }
+            }
+        }
+        return score;
+    }
+    
+    public void printScore(Player player){
+        int score = getPlayerScore(player);
+        System.out.println("C "+ score);
+    }
+    //prints outline of board 
     public void printBoard() {
-        char[] ah = {' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-        for (int i = 0; i < ah.length; i++) {
-            System.out.print(ah[i] + " ");
+        char[] a2h = {' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        for (int i = 0; i < a2h.length; i++) {
+            System.out.print(a2h[i] + " ");
         }
         System.out.println();
     }
 
+    //prints string representation of board
     @Override
     public String toString() {
         printBoard();
@@ -270,16 +281,16 @@ public class Board {
             for (int col = 1; col < board.length - 1; col++) {
                 switch (board[row][col]) {
                     case -1:
-                        playerChar = 'W';
+                        playerChar = oppponentColor;
                         break;
                     case 1:
-                        playerChar = 'B';
+                        playerChar = playerColor;
                         break;
                     case 0:
                         playerChar = '-';
                         break;
                     default:
-                        playerChar = '*';
+                        playerChar = '#';
                         break;
                 }
                 str += " " + playerChar;

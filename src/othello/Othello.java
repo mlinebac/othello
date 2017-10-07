@@ -30,7 +30,7 @@ public class Othello {
     public static void main(String[] args) {
         String strMove;
         Scanner scan = new Scanner(System.in);
-        System.out.println("C Please choose your color");
+        System.out.println("C" + "Please choose your color");
         String str = scan.nextLine();
         player = new Player(str);//intialize player I B or I W only!!!
         myColor = player.getPlayerColor();

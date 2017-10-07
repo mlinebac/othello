@@ -41,8 +41,7 @@ public class Move {
         if (charArray[0] == 'B') {
             this.aiColor = 1;
         } else {
-
-            this.aiColor = -1;
+            this.color = -1;
         }
         this.x = Character.getNumericValue(charArray[2]) - 9;
         this.y = Character.getNumericValue(charArray[4]);

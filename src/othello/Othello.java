@@ -17,31 +17,33 @@ public class Othello {
 
     public final static int ME = 1;
     public final static int OPPONENT = -1;
-    
+
     public static Board gameBoard;
     public static int currentPlayer;// = int(1,-1);
     public static int myColor;
-    
+
     public static Player player;
     public static Move move;
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         String strMove;
         Scanner scan = new Scanner(System.in);
-        System.out.println("C" + "Please choose your color");
+        System.out.println("C " + "Please choose your color");
         String str = scan.nextLine();
         player = new Player(str);//intialize player I B or I W only!!!
         myColor = player.getPlayerColor();
         gameBoard = new Board(myColor);
-       if (myColor == 1){
-           currentPlayer = ME;
-       }else
-           currentPlayer = OPPONENT;
-       
+        if (myColor == 1) {
+            currentPlayer = ME;
+        } else {
+            currentPlayer = OPPONENT;
+        }
+
         //printing out my color to check if I B or I W is correct
-        System.out.println("C my color is: " + myColor);
+        System.out.println(player.toString());
         //printing out game board before moves have been made
         System.out.print(gameBoard.toString());
 
@@ -49,10 +51,9 @@ public class Othello {
         while (!gameBoard.gameOver()) {
             Move aiMove;
             if (currentPlayer == ME) {
-                ArrayList<Move> myList = gameBoard.generateMoves(myColor);
-                aiMove = myList.get(0);
+                aiMove = gameBoard.getMyMove();
             } else {
-                System.out.println("C Opponent's Turn" + "\nEnter your next move:");
+                System.out.println("C Opponent's Turn" + "\n C Enter your next move:");
                 //scan for opponents turn
                 strMove = scan.nextLine();
                 //get opponents move 
@@ -60,10 +61,15 @@ public class Othello {
             }
             //apply move to gameboard
             System.out.println("C This is the current player:" + currentPlayer);
-            gameBoard.applyMove(currentPlayer, aiMove);
+            gameBoard.applyMove(aiMove);
             //print updated gameboard with move applied
             System.out.print(gameBoard.toString());
-            System.out.println("\nC player moved to: " + aiMove.toString() + "\n");
+            if (currentPlayer == ME) {
+                System.out.println(aiMove.toString());
+            } else {
+                System.out.println("C " + aiMove.toString());
+            }
+
             //switch player turn 
             currentPlayer = currentPlayer * -1;
         }//end while loop

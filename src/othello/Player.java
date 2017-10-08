@@ -18,11 +18,11 @@ public class Player {
         String[] strArray = str.split(" ");
         // this.color = strArray[1];
         if (strArray[1].equals("B")) {
-            this.playerColor = 1;
-            this.opponentColor = -1;
+            this.playerColor = 1; //Black
+            this.opponentColor = -1;//White
         } else {
-            this.playerColor = -1;
-            this.opponentColor = 1;
+            this.playerColor = -1;//White
+            this.opponentColor = 1;//Black
         }
     }//end playerColor
 
@@ -31,8 +31,15 @@ public class Player {
     }
 
     public int getOpponentColor() {
-        
         return opponentColor;
+    }
+    
+    @Override
+    public String toString(){
+        if (playerColor == 1){
+           return "R B";
+        }else
+            return "R W";
     }
 
 }

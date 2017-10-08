@@ -6,6 +6,7 @@
 package othello;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -27,7 +28,7 @@ public class Board {
         downLeft, downRight};
 
     private char playerColor;
-    private char oppponentColor;
+    //private char oppponentColor;
     private final int BOARDER = -2;
     private final int BOARD_SIZE = 10;
     private final int EMPTY = 0;
@@ -36,7 +37,7 @@ public class Board {
     //constructor for empty board;
     public Board() {
         board = new int[BOARD_SIZE][BOARD_SIZE];
-        
+
     }
 
     //constructor that takes a player color and intiates board with boarders and 
@@ -57,15 +58,15 @@ public class Board {
         }
         //initial starting position of board and pieces
         if (color == 1) {
-            playerColor = 'B';
-            oppponentColor = 'W';
+            playerColor = 'B'; //equals 1 in player class
+            //oppponentColor = 'W'; //equals -1 in player class
             board[4][4] = -1;//opponent as White
             board[5][4] = 1;//me as Black
             board[4][5] = 1; //me as Black
             board[5][5] = -1; //opponent as White
         } else {
-            playerColor = 'W';
-            oppponentColor = 'B';
+            playerColor = 'W'; // equals -1 in playerclass
+            //oppponentColor = 'B'; //equals 1 in player class
             board[4][4] = 1; //me as White
             board[5][4] = -1; //opponent as Black
             board[4][5] = -1; //opponent as Black
@@ -99,19 +100,9 @@ public class Board {
     //check if move is legal 
     public boolean isLegalMove(int color, Move move) {
         boolean legal = false;
-        int currentPlayer = 0;
-        int opponent = 0;
-        
-        if (this.playerColor == 'B'){
-        opponent = color * -1;
-        currentPlayer = color;
-        }
-        
-        if(this.playerColor == 'W'){
-            opponent = color;
-            currentPlayer = color * -1;
-        }
-        
+        int currentPlayer = color;
+        int opponent = color * -1;
+
         int x = move.getX();
         int y = move.getY();
 
@@ -161,7 +152,7 @@ public class Board {
 
         for (int i = 1; i < board.length - 1; i++) {
             for (int j = 1; j < board.length - 1; j++) {
-               
+
                 Move move = new Move(currentPlayer, i, j);
                 //if it's a legal move add it to the list of legal moves
                 if (isLegalMove(currentPlayer, move)) {
@@ -172,19 +163,17 @@ public class Board {
         //return list of legal moves for player
         return validMoves;
     }
-    //places marker at this moves coordinates with updated board 
-    public void applyMove(int currentPlayer, Move move) {
-        placeMarker(currentPlayer, move);
-    }
+
     //returns updated board if move was to be made
-    public Board placeMarker(int color, Move move) {
-       //check to see if move is legal or not
+    public Board applyMove(Move move) {
+        //check to see if move is legal or not
+        int color = move.color;
         if (isLegalMove(color, move) != true) {
-            System.out.println("\nillegal move!!!\n");
+            System.out.println("\nC illegal move!!!\n");
             return this;
         }
-
         //get new instance of board
+
         Board newBoard;
         newBoard = this.getCopy();
         int x = move.getX();
@@ -222,6 +211,21 @@ public class Board {
 
     }
 
+    public Move getMyMove() {
+        int myColor;
+        if (playerColor == 'B') {
+            myColor = 1;
+        } else {
+            myColor = -1;
+        }
+        //pick a random move from my list of valid moves
+        Random rand = new Random();
+        ArrayList<Move> myList = generateMoves(myColor);
+        int index = rand.nextInt(myList.size());
+        return myList.get(index);
+
+    }
+
     //put marker at this coordinate 
     public void setMarker(int marker, int x, int y) {
         if (!(x <= BOARDER || y <= BOARDER)) {
@@ -244,6 +248,7 @@ public class Board {
 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
+        
         return false; //returning false for now until method is finished;
     }
 
@@ -268,11 +273,11 @@ public class Board {
     //prints outline of board 
     public void printBoard() {
         char[] a2h = {' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-        System.out.print("C");
+        System.out.print("C ");
         for (int i = 0; i < a2h.length; i++) {
             System.out.print(a2h[i] + " ");
         }
-        
+
         System.out.println();
     }
 
@@ -284,14 +289,14 @@ public class Board {
         int count = 1;
         char playerChar;
         for (int row = 1; row < board.length - 1; row++) {
-            str += "C" + count;
+            str += "C " + count;
             for (int col = 1; col < board.length - 1; col++) {
                 switch (board[row][col]) {
                     case -1:
-                        playerChar = oppponentColor;
+                        playerChar = 'W';
                         break;
                     case 1:
-                        playerChar = playerColor;
+                        playerChar = 'B';
                         break;
                     case 0:
                         playerChar = '-';

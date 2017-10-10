@@ -7,6 +7,7 @@ package othello;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  *
@@ -26,9 +27,9 @@ public class Board {
     //array of all directions
     final Move directions[] = {up, down, left, right, upLeft, upRight,
         downLeft, downRight};
-
-    private char playerColor;
-    //private char oppponentColor;
+    public static int boardColor;
+    private int Black;
+    private int White;
     private final int BOARDER = -2;
     private final int BOARD_SIZE = 10;
     private final int EMPTY = 0;
@@ -43,7 +44,7 @@ public class Board {
     //constructor that takes a player color and intiates board with boarders and 
     //players at starting positions
     public Board(int color) {
-
+        Board.boardColor = color;
         this.board = new int[BOARD_SIZE][BOARD_SIZE];
         for (int i = 1; i < BOARD_SIZE - 1; i++) {
             for (int j = 1; j < BOARD_SIZE - 1; j++) {
@@ -58,19 +59,19 @@ public class Board {
         }
         //initial starting position of board and pieces
         if (color == 1) {
-            playerColor = 'B'; //equals 1 in player class
-            //oppponentColor = 'W'; //equals -1 in player class
-            board[4][4] = -1;//opponent as White
-            board[5][4] = 1;//me as Black
-            board[4][5] = 1; //me as Black
-            board[5][5] = -1; //opponent as White
+            Black = 1; //set my color to Black
+            White = -1; //set opponent color to white
+            board[4][4] = White;//opponent as White
+            board[5][4] = Black;//me as Black
+            board[4][5] = Black; //me as Black
+            board[5][5] = White; //opponent as White
         } else {
-            playerColor = 'W'; // equals -1 in playerclass
-            //oppponentColor = 'B'; //equals 1 in player class
-            board[4][4] = 1; //me as White
-            board[5][4] = -1; //opponent as Black
-            board[4][5] = -1; //opponent as Black
-            board[5][5] = 1; //me as White
+            Black = -1; // set opponent color to Black
+            White = 1; // set my color to White
+            board[4][4] = White; //me as White
+            board[5][4] = Black; //opponent as Black
+            board[4][5] = Black; //opponent as Black
+            board[5][5] = White; //me as White
         }
     }
 
@@ -102,7 +103,6 @@ public class Board {
         boolean legal = false;
         int currentPlayer = color;
         int opponent = color * -1;
-
         int x = move.getX();
         int y = move.getY();
 
@@ -146,16 +146,16 @@ public class Board {
     }
 
     //generates a list of valid moves a player can make
-    public ArrayList<Move> generateMoves(int currentPlayer) {
+    public ArrayList<Move> generateMoves(int myColor) {
         ArrayList<Move> validMoves = new ArrayList<>();
         //check the entire board for legal moves a player can make
 
-        for (int i = 1; i < board.length - 1; i++) {
+        for (char i = 1; i < board.length - 1; i++) {
             for (int j = 1; j < board.length - 1; j++) {
 
-                Move move = new Move(currentPlayer, i, j);
+                Move move = new Move(myColor, i, j);
                 //if it's a legal move add it to the list of legal moves
-                if (isLegalMove(currentPlayer, move)) {
+                if (isLegalMove(myColor, move)) {
                     validMoves.add(move);
                 }
             }
@@ -165,15 +165,9 @@ public class Board {
     }
 
     //returns updated board if move was to be made
-    public Board applyMove(Move move) {
-        //check to see if move is legal or not
-        int color = move.color;
-        if (isLegalMove(color, move) != true) {
-            System.out.println("\nC illegal move!!!\n");
-            return this;
-        }
-        //get new instance of board
+    public Board applyMove(int color, Move move) {
 
+        //get new instance of board
         Board newBoard;
         newBoard = this.getCopy();
         int x = move.getX();
@@ -212,17 +206,36 @@ public class Board {
     }
 
     public Move getMyMove() {
-        int myColor;
-        if (playerColor == 'B') {
-            myColor = 1;
-        } else {
-            myColor = -1;
-        }
         //pick a random move from my list of valid moves
         Random rand = new Random();
-        ArrayList<Move> myList = generateMoves(myColor);
-        int index = rand.nextInt(myList.size());
-        return myList.get(index);
+        ArrayList<Move> myList = generateMoves(Othello.ME);
+        if (!myList.isEmpty()) {
+            int index = rand.nextInt(myList.size());
+            return myList.get(index);
+        } else {
+            System.out.println("No more legal moves");
+            return new Move();
+        }
+    }
+
+    public Move getOpponentMove() {
+        int x;
+        int y;
+        Move opponentMove;
+        Scanner opponentScan = new Scanner(System.in);
+        String strMove = opponentScan.nextLine();
+
+        opponentMove = new Move(strMove);
+        x = opponentMove.getX();
+        y = opponentMove.getY();
+
+        Move move = new Move(x, y);
+
+        if (isLegalMove(Othello.OPPONENT, move) != false) {
+            return new Move(x, y);
+        }
+        System.out.println("C " + "Bad Move !!! Enter another move: ");
+        return getOpponentMove();
 
     }
 
@@ -248,7 +261,7 @@ public class Board {
 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
-        
+
         return false; //returning false for now until method is finished;
     }
 
@@ -287,23 +300,41 @@ public class Board {
         printBoard();
         String str = "";
         int count = 1;
-        char playerChar;
+        char playerChar = ' ';
         for (int row = 1; row < board.length - 1; row++) {
             str += "C " + count;
             for (int col = 1; col < board.length - 1; col++) {
-                switch (board[row][col]) {
-                    case -1:
-                        playerChar = 'W';
-                        break;
-                    case 1:
-                        playerChar = 'B';
-                        break;
-                    case 0:
-                        playerChar = '-';
-                        break;
-                    default:
-                        playerChar = '#'; //should not see this only to catch errors 
-                        break;
+                if (boardColor == 1) {
+                    switch (board[row][col]) {
+                        case -1:
+                            playerChar = 'W';
+                            break;
+                        case 1:
+                            playerChar = 'B';
+                            break;
+                        case 0:
+                            playerChar = '-';
+                            break;
+                        default:
+                            playerChar = '#'; //should not see this only to catch errors 
+                            break;
+                    }
+                } else {
+
+                    switch (board[row][col]) {
+                        case -1:
+                            playerChar = 'B';
+                            break;
+                        case 1:
+                            playerChar = 'W';
+                            break;
+                        case 0:
+                            playerChar = '-';
+                            break;
+                        default:
+                            playerChar = '#'; //should not see this only to catch errors 
+                            break;
+                    }
                 }
                 str += " " + playerChar;
             }//end col loop

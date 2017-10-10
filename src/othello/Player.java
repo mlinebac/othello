@@ -21,8 +21,8 @@ public class Player {
             this.playerColor = 1; //Black
             this.opponentColor = -1;//White
         } else {
-            this.playerColor = -1;//White
-            this.opponentColor = 1;//Black
+            this.playerColor = -1;//Black
+            this.opponentColor = 1;//White
         }
     }//end playerColor
 
@@ -33,13 +33,14 @@ public class Player {
     public int getOpponentColor() {
         return opponentColor;
     }
-    
+
     @Override
-    public String toString(){
-        if (playerColor == 1){
-           return "R B";
-        }else
+    public String toString() {
+        if (playerColor == 1) {
+            return "R B";
+        } else {
             return "R W";
+        }
     }
 
 }

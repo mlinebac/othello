@@ -5,8 +5,6 @@
  */
 package othello;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -29,7 +27,7 @@ public class Othello {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String strMove;
+
         Scanner scan = new Scanner(System.in);
         System.out.println("C " + "Please choose your color");
         String str = scan.nextLine();
@@ -54,21 +52,15 @@ public class Othello {
                 aiMove = gameBoard.getMyMove();
             } else {
                 System.out.println("C Opponent's Turn" + "\n C Enter your next move:");
-                //scan for opponents turn
-                strMove = scan.nextLine();
-                //get opponents move 
-                aiMove = new Move(strMove);
+                //get opponent move
+                aiMove = gameBoard.getOpponentMove();
             }
             //apply move to gameboard
             System.out.println("C This is the current player:" + currentPlayer);
-            gameBoard.applyMove(aiMove);
+            gameBoard.applyMove(currentPlayer, aiMove);
             //print updated gameboard with move applied
             System.out.print(gameBoard.toString());
-            if (currentPlayer == ME) {
-                System.out.println(aiMove.toString());
-            } else {
-                System.out.println("C " + aiMove.toString());
-            }
+            System.out.println(aiMove.toString());
 
             //switch player turn 
             currentPlayer = currentPlayer * -1;

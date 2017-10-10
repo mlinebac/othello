@@ -13,11 +13,16 @@ public class Move {
 
     int x;
     int y;
-    int aiColor;
     int color;
+    int optcolor;
+    Move move;
 
     public Move() {
-        //return passMove();
+        if (Board.boardColor == 1) {
+            this.move = new Move("B");
+        } else {
+            this.move = new Move("W");
+        }
     }
 
     public Move(int x, int y) {
@@ -29,7 +34,8 @@ public class Move {
         this.x = x;
         this.y = y;
         this.color = color;
-        
+        this.optcolor = color * -1;
+
     }
 
     public Move(Move m) {
@@ -39,14 +45,16 @@ public class Move {
 
     public Move(String str) {
         char[] charArray = str.toCharArray();
-        
+
         if (charArray[0] == 'B') {
             this.color = 1;
-            
+            this.optcolor = -1;
+
         } else {
             this.color = -1;
+            this.optcolor = 1;
         }
-        
+
         this.x = Character.getNumericValue(charArray[2]) - 9;
         this.y = Character.getNumericValue(charArray[4]);
     }//end Move constructor
@@ -58,43 +66,51 @@ public class Move {
     public int getY() {
         return y;
     }
-   public String toString(){
+
+    public int getMyColor() {
+        return color;
+    }
+
+    public int getOpponentColor() {
+        return color * -1;
+    }
+
+    public String toString() {
         char boardChar = ' ';
-        switch(this.x){
+        switch (x) {
             case 1:
                 boardChar = 'a';
                 break;
             case 2:
                 boardChar = 'b';
                 break;
-            case 3: 
+            case 3:
                 boardChar = 'c';
                 break;
-            case 4: 
+            case 4:
                 boardChar = 'd';
                 break;
-            case 5: 
+            case 5:
                 boardChar = 'e';
                 break;
-            case 6: 
+            case 6:
                 boardChar = 'f';
                 break;
-            case 7: 
+            case 7:
                 boardChar = 'g';
                 break;
-            case 8: 
+            case 8:
                 boardChar = 'h';
                 break;
-            
+
         }
-        char colorChar = ' ';
-        if (this.color == 1)
+        char colorChar;
+        if (Board.boardColor == 1) {
             colorChar = 'B';
-        else
+        } else {
             colorChar = 'W';
+        }
         return (colorChar + " " + boardChar + " " + y);
     }
-
-    
 
 }

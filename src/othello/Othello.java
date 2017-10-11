@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author matt
+ * @author Matt Lineback
  */
 public class Othello {
 
@@ -39,7 +39,6 @@ public class Othello {
         } else {
             currentPlayer = OPPONENT;
         }
-
         //printing out my color to check if I B or I W is correct
         System.out.println(player.toString());
         //printing out game board before moves have been made
@@ -51,17 +50,20 @@ public class Othello {
             if (currentPlayer == ME) {
                 aiMove = gameBoard.getMyMove();
             } else {
-                System.out.println("C Opponent's Turn" + "\n C Enter your next move:");
+                System.out.println("C Opponent's Turn" + "\nC Enter your next move:");
                 //get opponent move
                 aiMove = gameBoard.getOpponentMove();
             }
             //apply move to gameboard
             System.out.println("C This is the current player:" + currentPlayer);
             gameBoard.applyMove(currentPlayer, aiMove);
-            //print updated gameboard with move applied
             System.out.print(gameBoard.toString());
-            System.out.println(aiMove.toString());
-
+            //print updated gameboard with move applied
+            if (currentPlayer == ME) {
+                System.out.println(aiMove.toString());
+            } else {
+                System.out.println("C " + aiMove.toString());
+            }
             //switch player turn 
             currentPlayer = currentPlayer * -1;
         }//end while loop

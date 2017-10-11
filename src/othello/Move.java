@@ -75,6 +75,7 @@ public class Move {
         return color * -1;
     }
 
+    @Override
     public String toString() {
         char boardChar = ' ';
         switch (x) {

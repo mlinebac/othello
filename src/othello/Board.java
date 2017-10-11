@@ -213,7 +213,7 @@ public class Board {
             int index = rand.nextInt(myList.size());
             return myList.get(index);
         } else {
-            System.out.println("No more legal moves");
+            System.out.println("C No more legal moves");
             return new Move();
         }
     }

@@ -7,7 +7,7 @@ package othello;
 
 /**
  *
- * @author matt
+ * @author Matt Lineback
  */
 public class Player {
 
@@ -16,7 +16,6 @@ public class Player {
 
     public Player(String str) {
         String[] strArray = str.split(" ");
-        // this.color = strArray[1];
         if (strArray[1].equals("B")) {
             this.playerColor = 1; //Black
             this.opponentColor = -1;//White

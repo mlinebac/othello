@@ -16,9 +16,11 @@ public class Move {
     int color;
     int optcolor;
     Move move;
+    char colorChar;
+    String charString;
 
-    public Move() {
-        if (Board.boardColor == 1) {
+    public Move(int color) {
+        if (color == 1) {
             this.move = new Move("B");
         } else {
             this.move = new Move("W");
@@ -38,25 +40,35 @@ public class Move {
 
     }
 
+    /*
     public Move(Move m) {
         this.x = m.x;
         this.y = m.y;
     }
-
+     */
     public Move(String str) {
         char[] charArray = str.toCharArray();
+        if (charArray.length <= 1) {
+            if (charArray[0] == 'B') {
+                this.color = 1;
+                this.optcolor = -1;
+            } else {
+                this.color = -1;
+                this.optcolor = 1;
+            }
+        } else if (charArray.length > 1) {
+            if (charArray[0] == 'B') {
+                this.color = 1;
+                this.optcolor = -1;
 
-        if (charArray[0] == 'B') {
-            this.color = 1;
-            this.optcolor = -1;
+            } else {
+                this.color = -1;
+                this.optcolor = 1;
+            }
 
-        } else {
-            this.color = -1;
-            this.optcolor = 1;
+            this.x = Character.getNumericValue(charArray[2]) - 9;
+            this.y = Character.getNumericValue(charArray[4]);
         }
-
-        this.x = Character.getNumericValue(charArray[2]) - 9;
-        this.y = Character.getNumericValue(charArray[4]);
     }//end Move constructor
 
     public int getX() {
@@ -105,8 +117,8 @@ public class Move {
                 break;
 
         }
-        char colorChar;
-        if (Board.boardColor == 1) {
+
+        if (color == 1) {
             colorChar = 'B';
         } else {
             colorChar = 'W';

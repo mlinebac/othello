@@ -14,7 +14,10 @@ import java.util.Scanner;
  * @author Matt Lineback
  */
 public class Board {
-
+    
+    public enum Cell{
+    
+}
     //all possible move directions
     public final Move up = new Move(0, -1); // up
     public final Move down = new Move(0, 1); // down
@@ -153,7 +156,7 @@ public class Board {
         for (char i = 1; i < board.length - 1; i++) {
             for (int j = 1; j < board.length - 1; j++) {
 
-                Move move = new Move(myColor, i, j);
+                Move move = new Move(myColor * Black, i, j);
                 //if it's a legal move add it to the list of legal moves
                 if (isLegalMove(myColor, move)) {
                     validMoves.add(move);
@@ -214,28 +217,24 @@ public class Board {
             return myList.get(index);
         } else {
             System.out.println("C No more legal moves");
-            return new Move();
+            return new Move(Othello.ME * Black);
         }
     }
 
     public Move getOpponentMove() {
-        int x;
-        int y;
+
         Move opponentMove;
         Scanner opponentScan = new Scanner(System.in);
         String strMove = opponentScan.nextLine();
 
         opponentMove = new Move(strMove);
-        x = opponentMove.getX();
-        y = opponentMove.getY();
 
-        Move move = new Move(x, y);
-
-        if (isLegalMove(Othello.OPPONENT, move) != false) {
-            return new Move(x, y);
+        if (isLegalMove(Othello.OPPONENT, opponentMove) != false) {
+            return opponentMove;
         }
         System.out.println("C " + "Bad Move !!! Enter another move: ");
-        return getOpponentMove();
+        return new Move(Othello.OPPONENT * Black);
+        //return getOpponentMove();
 
     }
 
@@ -250,8 +249,13 @@ public class Board {
 
     //get marker at this coordinate and return it 
     public int getMarker(int x, int y) {
-        int markerColor = board[y][x];
-        return markerColor;
+        int markerColor;
+        if ((board[y][x] > BOARDER)) {
+            markerColor = board[y][x];
+            return markerColor;
+        } else {
+            return 0;
+        }
     }
 
     //method needs to be finished!!!

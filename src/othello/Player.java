@@ -10,32 +10,32 @@ package othello;
  * @author Matt Lineback
  */
 public class Player {
-
-    int playerColor;
-    int opponentColor;
+    
+    char playerColor;
+    char opponentColor;
 
     public Player(String str) {
         String[] strArray = str.split(" ");
         if (strArray[1].equals("B")) {
-            this.playerColor = 1; //Black
-            this.opponentColor = -1;//White
+            this.playerColor = 'B'; //Black
+            this.opponentColor = 'W';//White
         } else {
-            this.playerColor = -1;//Black
-            this.opponentColor = 1;//White
+            this.playerColor = 'W';//Black
+            this.opponentColor = 'B';//White
         }
     }//end playerColor
 
-    public int getPlayerColor() {
+    public char getPlayerColor() {
         return playerColor;
     }
 
-    public int getOpponentColor() {
+    public char getOpponentColor() {
         return opponentColor;
     }
 
     @Override
     public String toString() {
-        if (playerColor == 1) {
+        if (playerColor == 'B') {
             return "R B";
         } else {
             return "R W";

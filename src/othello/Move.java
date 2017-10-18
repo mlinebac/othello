@@ -5,26 +5,24 @@
  */
 package othello;
 
+import othello.Board.Cell;
+
 /**
  *
  * @author matt
  */
 public class Move {
 
-    int x;
-    int y;
-    int color;
-    int optcolor;
-    Move move;
-    char colorChar;
-    String charString;
+    public int x;
+    public int y;
+    public char playerColor;
+    Cell playerColorCell;
+    Cell opponentColorCell;
 
-    public Move(int color) {
-        if (color == 1) {
-            this.move = new Move("B");
-        } else {
-            this.move = new Move("W");
-        }
+    public Move(char color) {
+
+        this.playerColor = color;
+
     }
 
     public Move(int x, int y) {
@@ -32,43 +30,44 @@ public class Move {
         this.y = y;
     }
 
-    public Move(int color, int x, int y) {
+    public Move(char color, int x, int y) {
         this.x = x;
         this.y = y;
-        this.color = color;
-        this.optcolor = color * -1;
-
+        this.playerColor = color;
+        if (color == 'B') {
+            this.playerColorCell = Cell.BLACK;
+            this.opponentColorCell = Cell.WHITE;
+        } else {
+            this.playerColorCell = Cell.WHITE;
+            this.opponentColorCell = Cell.BLACK;
+        }
     }
 
-    /*
-    public Move(Move m) {
-        this.x = m.x;
-        this.y = m.y;
-    }
-     */
     public Move(String str) {
         char[] charArray = str.toCharArray();
         if (charArray.length <= 1) {
             if (charArray[0] == 'B') {
-                this.color = 1;
-                this.optcolor = -1;
+                this.playerColor = 'B';
+                this.playerColorCell = Cell.BLACK;
+                this.opponentColorCell = Cell.WHITE;
             } else {
-                this.color = -1;
-                this.optcolor = 1;
+                this.playerColor = 'W';
+                this.playerColorCell = Cell.WHITE;
+                this.opponentColorCell = Cell.BLACK;
             }
-        } else if (charArray.length > 1) {
+        }else{
             if (charArray[0] == 'B') {
-                this.color = 1;
-                this.optcolor = -1;
-
+                this.playerColor = 'B';
+                this.playerColorCell = Cell.BLACK;
+                this.opponentColorCell = Cell.WHITE;
             } else {
-                this.color = -1;
-                this.optcolor = 1;
+                this.playerColor = 'W';
+                this.playerColorCell = Cell.WHITE;
+                this.opponentColorCell = Cell.BLACK;
             }
-
             this.x = Character.getNumericValue(charArray[2]) - 9;
             this.y = Character.getNumericValue(charArray[4]);
-        }
+       }
     }//end Move constructor
 
     public int getX() {
@@ -79,12 +78,18 @@ public class Move {
         return y;
     }
 
-    public int getMyColor() {
-        return color;
+    public char getMyColor() {
+        return playerColor;
     }
-
-    public int getOpponentColor() {
-        return color * -1;
+    public Cell getMoveColor(){
+        Cell moveColor = playerColorCell;
+        return moveColor;
+    }
+    public Cell getPlayerColorCell() {
+        return playerColorCell;
+    }
+    public Cell getOpponentColorCell(){
+        return opponentColorCell;
     }
 
     @Override
@@ -117,13 +122,7 @@ public class Move {
                 break;
 
         }
-
-        if (color == 1) {
-            colorChar = 'B';
-        } else {
-            colorChar = 'W';
-        }
-        return (colorChar + " " + boardChar + " " + y);
+        return (playerColor + " " + boardChar + " " + y);
     }
 
 }

@@ -18,8 +18,8 @@ public class Othello {
 
     public static Board gameBoard;
     public static int currentPlayer;// = int(1,-1);
-    public static int myColor;
-
+    public static char myColor;
+    public static char opponentColor;
     public static Player player;
     public static Move move;
 
@@ -33,8 +33,9 @@ public class Othello {
         String str = scan.nextLine();
         player = new Player(str);//intialize player I B or I W only!!!
         myColor = player.getPlayerColor();
+        opponentColor = player.getOpponentColor();
         gameBoard = new Board(myColor);
-        if (myColor == 1) {
+        if (myColor == 'B') {
             currentPlayer = ME;
         } else {
             currentPlayer = OPPONENT;
@@ -56,7 +57,7 @@ public class Othello {
             }
             //apply move to gameboard
             System.out.println("C This is the current player:" + currentPlayer);
-            gameBoard.applyMove(currentPlayer, aiMove);
+            gameBoard.applyMove(aiMove);
             System.out.print(gameBoard.toString());
             //print updated gameboard with move applied
             if (currentPlayer == ME) {
@@ -66,9 +67,10 @@ public class Othello {
             }
             //switch player turn 
             currentPlayer = currentPlayer * -1;
+            gameBoard.printScore(myColor, opponentColor);
         }//end while loop
         //print out players score when game is over
-        gameBoard.printScore(player);
+        //gameBoard.printScore(player);
     }//end main
 
 }

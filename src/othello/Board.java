@@ -234,7 +234,6 @@ public class Board {
 
     //get marker at this coordinate and return it 
     public Cell getMarker(int x, int y) {
-        System.out.println(board[y][x]);
         return board[y][x];
 
     }

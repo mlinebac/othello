@@ -20,10 +20,10 @@ public class Move {
     Cell opponentColorCell;
     int size;
 
-    
-    public Move(){
-        
+    public Move() {
+
     }
+
     public Move(char color) {
 
         this.playerColor = color;
@@ -50,7 +50,7 @@ public class Move {
 
     public Move(String str) {
         char[] charArray = str.toCharArray();
-        
+
         if (charArray.length == 1) {
             if (charArray[0] == 'B') {
                 this.playerColor = 'B';
@@ -140,10 +140,11 @@ public class Move {
         }
         return (playerColor + " " + boardChar + " " + y);
     }
+
     @Override
-    public boolean equals(Object otherParam ){
-        Move other = (Move)otherParam;
-        return x == other.x  && y == other.y;
+    public boolean equals(Object otherParam) {
+        Move other = (Move) otherParam;
+        return x == other.x && y == other.y;
     }
 
     @Override

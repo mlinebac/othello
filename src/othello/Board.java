@@ -61,7 +61,8 @@ public class Board {
         }
 
     }
-
+    
+    public int playerScore;
     private final int BOARD_SIZE = 10;
     Cell[][] board;
 
@@ -226,13 +227,13 @@ public class Board {
 
     }
 
-    //put marker at this coordinate 
+    //put Cell marker at this coordinate 
     public void setMarker(Cell color, int x, int y) {
         this.board[y][x] = color;
 
     }
 
-    //get marker at this coordinate and return it 
+    //get Cell marker at this coordinate and return it 
     public Cell getMarker(int x, int y) {
         return board[y][x];
 
@@ -250,65 +251,106 @@ public class Board {
             return new Move(Othello.myColor);
         }
     }
+    /*
+    public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth){
+       if (ply >= maxDepth){
+           Move returnMove = new Move();
+           returnMove.playerColorCell = currentBoard.evaluate();
+           return returnMove;
+       }    
+       else {
+           
+               1. generate Moves for player
+               2. if MoveList is empty, add passmove to movelist
+               3. bestMove = moveList.get(0)
+               4. for each move in the move list
+                  a.) newBoard = currentBoard.applyMove(player, move)
+                  b.) tempMove = alphaBeta(newBoard, ply+1, -player, -beta, -alpha, maxDepth)
+                  c.) move.value = -tempMove.value;
+                  d.) if moveValue > alpha
+                      c0) bestMove = move
+                      c1) alpha = moveValue
+                      c2) if alpha > beta
+                            return bestMove
+              5.) return bestMove        
+           
+           ArrayList<Move> moves = currentBoard.generateMoves(myColor);
+           if (moves.isEmpty()) moves.add(new Move()); //add pass move if empty
+           Move bestMove = moves.get(0);
+           for (Move move : moves){
+               Board newBoard = currentBoard.getCopy();
+               newBoard.applyMove(move);//(player, move);
 
-    public Move getOpponentMove() {
-        /*
-        oppMove = assume invalid until they enter valid
-        moves = generate legal moves
-        if (no moves) -> add pass move to moves list
-        while (opp has not entered a move in moves list)
-            ask opp for move
-        
-        return oppMove
-         */
-        String strMove;
-        Move opponentMove = null; 
-        ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
-        if (opponentList.isEmpty()) {
-            if (Othello.opponentColor == 'B') {
-                strMove = "W";
-            } else {
-                strMove = "B";
-            }
-           // opponentMove = new Move(strMove);
-            opponentList.add(new Move(strMove));
-        }
-        while (opponentMove == null) {
-            System.out.println("C " + "Enter Opponent Move: ");
-            Scanner opponentScan = new Scanner(System.in);
-            strMove = opponentScan.nextLine();
-            opponentMove = new Move(strMove);
-            if (!opponentList.contains(opponentMove)){
-                System.out.println("C " + "Invalid Move!");
-                opponentMove = null;
-            }
-            //if opponent move is not in opponent list
-            //    print invalid move
-            //    opponentMove = null
-            
-        }
-       
-            return opponentMove;
+               Move tempMove =  alphaBeta(newBoard, ply+1, Othello.opponentColor, -beta, -alpha, maxDepth);
+               move.value = -tempMove.value;
+               if (move.value > alpha){
+                   bestMove = move;
+                   alpha = move.value;
+                   if (alpha > beta)
+                       return bestMove;
+               }
+           }
+           return bestMove;
+       }
+
+    }
+   */
+   public Move getOpponentMove() {
+       /*
+       oppMove = assume invalid until they enter valid
+       moves = generate legal moves
+       if (no moves) -> add pass move to moves list
+       while (opp has not entered a move in moves list)
+           ask opp for move
+
+       return oppMove
+        */
+       String strMove;
+       Move opponentMove = null; 
+       ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
+       if (opponentList.isEmpty()) {
+           if (Othello.opponentColor == 'B') {
+               strMove = "W";
+           } else {
+               strMove = "B";
+           }
+          // opponentMove = new Move(strMove);
+           opponentList.add(new Move(strMove));
+       }
+       while (opponentMove == null) {
+           System.out.println("C " + "Enter Opponent Move: ");
+           Scanner opponentScan = new Scanner(System.in);
+           strMove = opponentScan.nextLine();
+           opponentMove = new Move(strMove);
+           if (!opponentList.contains(opponentMove)){
+               System.out.println("C " + "Invalid Move!");
+               opponentMove = null;
+           }
+           //if opponent move is not in opponent list
+           //    print invalid move
+           //    opponentMove = null
+
+       }
+
+           return opponentMove;
 
     }
 
     //method needs to be finished!!!
-    public int evaluate() {
-        return 0;
+    public Cell evaluate() {
+        return null ; //0
     }
 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
-        
-        return false; //returning false for now until method is finished;
+        return playerScore == 64; //returning false for now until method is finished;
     }
-
     //checks the board and counts num of player pieces on the board and returns count sum;
     public int getPlayerScore() {
         return playerScore;
     }
 
-    int playerScore;
+    
 
     public void setPlayerScore(char player) {
         Cell color;
@@ -331,11 +373,10 @@ public class Board {
 
     public void printScore(char me, char opponent) {
         setPlayerScore(me);
-        int myScore;
-        myScore = getPlayerScore();
+        int myScore = getPlayerScore();
+        
         setPlayerScore(opponent);
-        int opponentScore;
-        opponentScore = getPlayerScore();
+        int opponentScore = getPlayerScore();
         System.out.println("C My score is: " + myScore + "\nC Opponent score is: " + opponentScore);
     }
 

@@ -51,13 +51,15 @@ public class Othello {
             if (currentPlayer == ME) {
                 aiMove = gameBoard.getMyMove();
             } else {
-                System.out.println("C Opponent's Turn" + "\nC Enter your next move:");
+                //System.out.println("C Opponent's Turn" + "\nC Enter your next move:");
                 //get opponent move
                 aiMove = gameBoard.getOpponentMove();
             }
             //apply move to gameboard
             System.out.println("C This is the current player:" + currentPlayer);
+           
             gameBoard.applyMove(aiMove);
+            
             System.out.print(gameBoard.toString());
             //print updated gameboard with move applied
             if (currentPlayer == ME) {
@@ -68,6 +70,7 @@ public class Othello {
             //switch player turn 
             currentPlayer = currentPlayer * -1;
             gameBoard.printScore(myColor, opponentColor);
+           
         }//end while loop
         //print out players score when game is over
         //gameBoard.printScore(player);

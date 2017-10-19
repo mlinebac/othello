@@ -18,7 +18,12 @@ public class Move {
     public char playerColor;
     Cell playerColorCell;
     Cell opponentColorCell;
+    int size;
 
+    
+    public Move(){
+        
+    }
     public Move(char color) {
 
         this.playerColor = color;
@@ -45,7 +50,8 @@ public class Move {
 
     public Move(String str) {
         char[] charArray = str.toCharArray();
-        if (charArray.length <= 1) {
+        
+        if (charArray.length == 1) {
             if (charArray[0] == 'B') {
                 this.playerColor = 'B';
                 this.playerColorCell = Cell.BLACK;
@@ -55,7 +61,8 @@ public class Move {
                 this.playerColorCell = Cell.WHITE;
                 this.opponentColorCell = Cell.BLACK;
             }
-        }else{
+            this.size = charArray.length;
+        } else {
             if (charArray[0] == 'B') {
                 this.playerColor = 'B';
                 this.playerColorCell = Cell.BLACK;
@@ -64,10 +71,12 @@ public class Move {
                 this.playerColor = 'W';
                 this.playerColorCell = Cell.WHITE;
                 this.opponentColorCell = Cell.BLACK;
+
             }
+            this.size = charArray.length;
             this.x = Character.getNumericValue(charArray[2]) - 9;
             this.y = Character.getNumericValue(charArray[4]);
-       }
+        }
     }//end Move constructor
 
     public int getX() {
@@ -78,17 +87,24 @@ public class Move {
         return y;
     }
 
+    public int getSize() {
+        return size;
+    }
+
     public char getMyColor() {
         return playerColor;
     }
-    public Cell getMoveColor(){
+
+    public Cell getMoveColor() {
         Cell moveColor = playerColorCell;
         return moveColor;
     }
+
     public Cell getPlayerColorCell() {
         return playerColorCell;
     }
-    public Cell getOpponentColorCell(){
+
+    public Cell getOpponentColorCell() {
         return opponentColorCell;
     }
 
@@ -123,6 +139,19 @@ public class Move {
 
         }
         return (playerColor + " " + boardChar + " " + y);
+    }
+    @Override
+    public boolean equals(Object otherParam ){
+        Move other = (Move)otherParam;
+        return x == other.x  && y == other.y;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + this.x;
+        hash = 41 * hash + this.y;
+        return hash;
     }
 
 }

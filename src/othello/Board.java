@@ -187,7 +187,7 @@ public class Board {
     //returns updated board if move was to be made
     public Board applyMove(Move move) {
         Cell color = move.getMoveColor();
-        
+
         //get new instance of board
         Board newBoard;
         newBoard = this.getCopy();
@@ -253,17 +253,43 @@ public class Board {
     }
 
     public Move getOpponentMove() {
-        Move opponentMove;
-        Scanner opponentScan = new Scanner(System.in);
-        String strMove = opponentScan.nextLine();
-
-        opponentMove = new Move(strMove);
-
-        if (isLegalMove(opponentMove) != false) {
-            return opponentMove;
+        /*
+        oppMove = assume invalid until they enter valid
+        moves = generate legal moves
+        if (no moves) -> add pass move to moves list
+        while (opp has not entered a move in moves list)
+            ask opp for move
+        
+        return oppMove
+         */
+        String strMove;
+        Move opponentMove = null; 
+        ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
+        if (opponentList.isEmpty()) {
+            if (Othello.opponentColor == 'B') {
+                strMove = "W";
+            } else {
+                strMove = "B";
+            }
+           // opponentMove = new Move(strMove);
+            opponentList.add(new Move(strMove));
         }
-        System.out.println("C " + "Bad Move !!! Player passes ");
-        return getMyMove();
+        while (opponentMove == null) {
+            System.out.println("C " + "Enter Opponent Move: ");
+            Scanner opponentScan = new Scanner(System.in);
+            strMove = opponentScan.nextLine();
+            opponentMove = new Move(strMove);
+            if (!opponentList.contains(opponentMove)){
+                System.out.println("C " + "Invalid Move!");
+                opponentMove = null;
+            }
+            //if opponent move is not in opponent list
+            //    print invalid move
+            //    opponentMove = null
+            
+        }
+       
+            return opponentMove;
 
     }
 
@@ -274,15 +300,20 @@ public class Board {
 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
-
+        
         return false; //returning false for now until method is finished;
     }
 
     //checks the board and counts num of player pieces on the board and returns count sum;
-    public int getPlayerScore(char player) {
+    public int getPlayerScore() {
+        return playerScore;
+    }
 
+    int playerScore;
+
+    public void setPlayerScore(char player) {
         Cell color;
-        if (player == Cell.BLACK.getChar()) {
+        if (player == 'B') {
             color = Cell.BLACK;
         } else {
             color = Cell.WHITE;
@@ -295,12 +326,17 @@ public class Board {
                 }
             }
         }
-        return score;
+        //return score;
+        this.playerScore = score;
     }
 
     public void printScore(char me, char opponent) {
-        int myScore = getPlayerScore(me);
-        int opponentScore = getPlayerScore(opponent);
+        setPlayerScore(me);
+        int myScore;
+        myScore = getPlayerScore();
+        setPlayerScore(opponent);
+        int opponentScore;
+        opponentScore = getPlayerScore();
         System.out.println("C My score is: " + myScore + "\nC Opponent score is: " + opponentScore);
     }
 

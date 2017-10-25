@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
  */
 package othello;
 
@@ -61,7 +59,7 @@ public class Board {
         }
 
     }
-    
+
     public int playerScore;
     private final int BOARD_SIZE = 10;
     Cell[][] board;
@@ -247,10 +245,19 @@ public class Board {
             int index = rand.nextInt(myList.size());
             return myList.get(index);
         } else {
-            System.out.println("C No more legal moves");
+            //System.out.println("C No more legal moves");
+            String strMove;
+            if (Othello.myColor == 'B') {
+                strMove = "B";
+            } else {
+                strMove = "W";
+            }
+            // opponentMove = new Move(strMove);
+            myList.add(new Move(strMove));
             return new Move(Othello.myColor);
         }
     }
+
     /*
     public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth){
        if (ply >= maxDepth){
@@ -294,63 +301,50 @@ public class Board {
        }
 
     }
-   */
-   public Move getOpponentMove() {
-       /*
-       oppMove = assume invalid until they enter valid
-       moves = generate legal moves
-       if (no moves) -> add pass move to moves list
-       while (opp has not entered a move in moves list)
-           ask opp for move
-
-       return oppMove
-        */
-       String strMove;
-       Move opponentMove = null; 
-       ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
-       if (opponentList.isEmpty()) {
-           if (Othello.opponentColor == 'B') {
-               strMove = "W";
-           } else {
-               strMove = "B";
-           }
-          // opponentMove = new Move(strMove);
-           opponentList.add(new Move(strMove));
-       }
-       while (opponentMove == null) {
-           System.out.println("C " + "Enter Opponent Move: ");
-           Scanner opponentScan = new Scanner(System.in);
-           strMove = opponentScan.nextLine();
-           opponentMove = new Move(strMove);
-           if (!opponentList.contains(opponentMove)){
-               System.out.println("C " + "Invalid Move!");
-               opponentMove = null;
-           }
-           //if opponent move is not in opponent list
-           //    print invalid move
-           //    opponentMove = null
-
-       }
-
-           return opponentMove;
-
+     */
+    public Move getOpponentMove() {
+        String strMove;
+        Move opponentMove = null;
+        ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
+        if (opponentList.isEmpty()) {
+            if (Othello.opponentColor == 'B') {
+                strMove = "B";
+            } else {
+                strMove = "W";
+            }
+            opponentList.add(new Move(strMove));
+        }
+        while (opponentMove == null) {
+            System.out.println("C " + "Enter Opponent Move: ");
+            Scanner opponentScan = new Scanner(System.in);
+            strMove = opponentScan.nextLine();
+            opponentMove = new Move(strMove);
+            if (!opponentList.contains(opponentMove)) {
+                System.out.println("C " + "Invalid Move!");
+                opponentMove = null;
+            }
+        }
+        return opponentMove;
     }
 
     //method needs to be finished!!!
-    public Cell evaluate() {
-        return null ; //0
+    public Double evaluate() {
+        Double value;
+        Move move = getMyMove();
+        move.setValue();
+        value = move.getValue();
+        return value; //0
     }
 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
         return playerScore == 64; //returning false for now until method is finished;
     }
+
     //checks the board and counts num of player pieces on the board and returns count sum;
     public int getPlayerScore() {
         return playerScore;
     }
-
-    
 
     public void setPlayerScore(char player) {
         Cell color;
@@ -374,7 +368,7 @@ public class Board {
     public void printScore(char me, char opponent) {
         setPlayerScore(me);
         int myScore = getPlayerScore();
-        
+
         setPlayerScore(opponent);
         int opponentScore = getPlayerScore();
         System.out.println("C My score is: " + myScore + "\nC Opponent score is: " + opponentScore);

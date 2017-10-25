@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
  */
 package othello;
 
@@ -9,7 +7,7 @@ import othello.Board.Cell;
 
 /**
  *
- * @author matt
+ * @author Matt Lineback
  */
 public class Move {
 
@@ -19,6 +17,8 @@ public class Move {
     Cell playerColorCell;
     Cell opponentColorCell;
     int size;
+    double value;
+    double [][] values;
 
     public Move() {
 
@@ -61,6 +61,8 @@ public class Move {
                 this.playerColorCell = Cell.WHITE;
                 this.opponentColorCell = Cell.BLACK;
             }
+            this.x = 0;
+            this.y = 0;
             this.size = charArray.length;
         } else {
             if (charArray[0] == 'B') {
@@ -107,7 +109,62 @@ public class Move {
     public Cell getOpponentColorCell() {
         return opponentColorCell;
     }
-
+    
+    public void setValue(){
+        //values = new double [10][10];
+        values = new double [][]{
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, 10, -1, -1, -1, -1, -1, -1, 10, -1},
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, 10, -1, -1, -1, -1, -1, -1, 10, -1},
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+        };
+        values[1][1] = 10;
+        values[1][8] = 10;
+        values[8][1] = 10;
+        values[8][8] = 10;
+        values[1][2] = -5;
+        values[1][7] = -5;
+        values[2][1] = -5;
+        values[2][2] = -5;
+        values[2][7] = -5;
+        values[2][8] = -5;
+        values[7][1] = -5;
+        values[7][2] = -5;
+        values[7][7] = -5;
+        values[7][8] = -5;
+        values[8][2] = -5;
+        values[8][7] = -5;
+        values[3][1] = 1;
+        values[4][1] = 1;
+        values[5][1] = 1;
+        values[6][1] = 1;
+        values[1][3] = 1;
+        values[1][4] = 1;
+        values[1][5] = 1;
+        values[1][6] = 1;
+        values[3][8] = 1;
+        values[4][8] = 1;
+        values[5][8] = 1;
+        values[6][8] = 1;
+        values[8][3] = 1;
+        values[8][4] = 1;
+        values[8][5] = 1;
+        values[8][6] = 1;
+    }
+    
+    public double getValue(){
+        x = this.getX();
+        y = this.getY();
+        value = values[y][x];
+        return value;
+    }
+    
     @Override
     public String toString() {
         char boardChar = ' ';

@@ -185,11 +185,16 @@ public class Board {
 
     //returns updated board if move was to be made
     public Board applyMove(Move move) {
+        
         Cell color = move.getMoveColor();
-
         //get new instance of board
         Board newBoard;
         newBoard = this.getCopy();
+        
+        if(move.getSize() == 1){
+            return newBoard;
+        }else{
+        
         int x = move.getX();
         int y = move.getY();
         //set marker location on new board
@@ -220,9 +225,9 @@ public class Board {
                 }
             }
         }
-
+    
         return newBoard;
-
+    }
     }
 
     //put Cell marker at this coordinate 
@@ -253,8 +258,9 @@ public class Board {
                 strMove = "W";
             }
             // opponentMove = new Move(strMove);
-            myList.add(new Move(strMove));
-            return new Move(Othello.myColor);
+            //myList.add(new Move(strMove));
+            System.out.println("C This is my Move for passing!!!" + strMove);
+            return new Move(strMove);
         }
     }
 
@@ -327,6 +333,7 @@ public class Board {
         return opponentMove;
     }
 
+    
     //method needs to be finished!!!
     public Double evaluate() {
         Double value;

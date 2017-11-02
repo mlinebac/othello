@@ -86,7 +86,21 @@ public class Board {
             board[BOARD_SIZE - 1][i] = Cell.BOARDER;
             board[i][BOARD_SIZE - 1] = Cell.BOARDER;
         }
-
+        /*
+        board = new Cell [][]{
+            {Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY,Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.WHITE, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.WHITE, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.BLACK, Cell.WHITE, Cell.WHITE, Cell.WHITE, Cell.BLACK, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.WHITE, Cell.WHITE, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
+            {Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER},
+            };
+    */
+        
         board[4][4] = Cell.WHITE;//opponent as White
         board[5][4] = Cell.BLACK;//me as Black
         board[4][5] = Cell.BLACK; //me as Black
@@ -122,8 +136,8 @@ public class Board {
         Cell playerMoveColor = move.playerColorCell;
         Cell opponentMoveColor = move.opponentColorCell;
 
-        int x = move.getX();
-        int y = move.getY();
+        int x = move.x;
+        int y = move.y;
 
         //check to see if the cell is empty
         if (board[y][x] != Cell.EMPTY) {
@@ -137,8 +151,8 @@ public class Board {
                 if (board[y + dirY][x + dirX] == opponentMoveColor) {
                     //do this while jump does not got out of bounds
                     while ((y + (jump * dirY)) > -1
-                            && (y + (jump * dirY)) < 8
-                            && (x + (jump * dirX)) < 8
+                            && (y + (jump * dirY)) < 9
+                            && (x + (jump * dirX)) < 9
                             && (x + (jump * dirX)) > -1) {
                         //if jump does not jump over empty or the players same color
                         //return is a legal move
@@ -165,14 +179,14 @@ public class Board {
     }
 
     //generates a list of valid moves a player can make
-    public ArrayList<Move> generateMoves(char myColor) {
+    public ArrayList<Move> generateMoves(char playerColor) {
         ArrayList<Move> validMoves = new ArrayList<>();
         //check the entire board for legal moves a player can make
 
-        for (char i = 1; i < board.length - 1; i++) {
-            for (int j = 1; j < board.length - 1; j++) {
+        for (int i = 1; i < BOARD_SIZE; i++) {
+            for (int j = 1; j < BOARD_SIZE; j++) {
 
-                Move move = new Move(myColor, i, j);
+                Move move = new Move(playerColor, i, j);
                 //if it's a legal move add it to the list of legal moves
                 if (isLegalMove(move)) {
                     validMoves.add(move);
@@ -180,54 +194,58 @@ public class Board {
             }
         }
         //return list of legal moves for player
+        /*
+        for (int i = 0; i < validMoves.size(); i++){
+        System.out.println(validMoves.get(i));
+    }
+        */
         return validMoves;
+        
     }
 
     //returns updated board if move was to be made
     public Board applyMove(Move move) {
-        
-        Cell color = move.getMoveColor();
-        //get new instance of board
-        Board newBoard;
-        newBoard = this.getCopy();
-        
-        if(move.getSize() == 1){
-            return newBoard;
-        }else{
-        
-        int x = move.getX();
-        int y = move.getY();
-        //set marker location on new board
-        setMarker(color, x, y);
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                Cell space = newBoard.getMarker(x + i, y + j);
-                int k = x + i;
-                int l = y + j;
-                while (space != Cell.BOARDER && space != color
-                        && space != Cell.EMPTY) {
-                    k += i;
-                    l += j;
-                    space = newBoard.getMarker(k, l);
-                }
-                if (space == color) {
-                    k -= i;
-                    l -= j;
-                    space = newBoard.getMarker(k, l);
+        if (move.getSize() == 1) {
+            return this;
+        } else {
+            Cell color = move.getMoveColor();
+            //get new instance of board
+            Board newBoard;
+            newBoard = this.getCopy();
+
+            int x = move.getX();
+            int y = move.getY();
+            //set marker location on new board
+            setMarker(color, x, y);
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
+                    Cell space = newBoard.getMarker(x + i, y + j);
+                    int k = x + i;
+                    int l = y + j;
                     while (space != Cell.BOARDER && space != color
                             && space != Cell.EMPTY) {
-                        setMarker(color, k, l);//flips marker
+                        k += i;
+                        l += j;
+                        space = newBoard.getMarker(k, l);
+                    }
+                    if (space == color) {
                         k -= i;
                         l -= j;
                         space = newBoard.getMarker(k, l);
+                        while (space != Cell.BOARDER && space != color
+                                && space != Cell.EMPTY) {
+                            setMarker(color, k, l);//flips marker
+                            k -= i;
+                            l -= j;
+                            space = newBoard.getMarker(k, l);
 
+                        }
                     }
                 }
             }
+
+            return newBoard;
         }
-    
-        return newBoard;
-    }
     }
 
     //put Cell marker at this coordinate 
@@ -243,6 +261,12 @@ public class Board {
     }
 
     public Move getMyMove() {
+        //get move for alpha beta evaluation
+        /*
+        double alpha = Double.MIN_VALUE;
+        double beta = Double.MAX_VALUE;
+        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 2);
+        */
         //pick a random move from my list of valid moves
         Random rand = new Random();
         ArrayList<Move> myList = generateMoves(Othello.myColor);
@@ -262,17 +286,16 @@ public class Board {
             System.out.println("C This is my Move for passing!!!" + strMove);
             return new Move(strMove);
         }
+         
     }
 
-    /*
-    public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth){
-       if (ply >= maxDepth){
-           Move returnMove = new Move();
-           returnMove.playerColorCell = currentBoard.evaluate();
-           return returnMove;
-       }    
-       else {
-           
+    public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth) {
+        if (ply >= maxDepth) {
+            Move returnMove = new Move();
+            returnMove.value = currentBoard.evaluate();
+            return returnMove;
+        } else {
+            /*
                1. generate Moves for player
                2. if MoveList is empty, add passmove to movelist
                3. bestMove = moveList.get(0)
@@ -286,28 +309,37 @@ public class Board {
                       c2) if alpha > beta
                             return bestMove
               5.) return bestMove        
-           
-           ArrayList<Move> moves = currentBoard.generateMoves(myColor);
-           if (moves.isEmpty()) moves.add(new Move()); //add pass move if empty
-           Move bestMove = moves.get(0);
-           for (Move move : moves){
-               Board newBoard = currentBoard.getCopy();
-               newBoard.applyMove(move);//(player, move);
+             */
+            ArrayList<Move> moves = currentBoard.generateMoves(myColor);
+            String strMove;
+            if (moves.isEmpty()) {
+                if (Othello.myColor == 'B') {
+                    strMove = "B";
+                } else {
+                    strMove = "W";
+                }
+                moves.add(new Move(strMove)); //add pass move if empty
+            }
+            Move bestMove = moves.get(0);
+            for (Move move : moves) {
+                Board newBoard = currentBoard.getCopy();
+                newBoard.applyMove(move);//(player, move);
 
-               Move tempMove =  alphaBeta(newBoard, ply+1, Othello.opponentColor, -beta, -alpha, maxDepth);
-               move.value = -tempMove.value;
-               if (move.value > alpha){
-                   bestMove = move;
-                   alpha = move.value;
-                   if (alpha > beta)
-                       return bestMove;
-               }
-           }
-           return bestMove;
-       }
+                Move tempMove = alphaBeta(newBoard, ply + 1, Othello.opponentColor, -beta, -alpha, maxDepth);
+                move.value = -tempMove.value;
+                if (move.value > alpha) {
+                    bestMove = move;
+                    alpha = move.value;
+                    if (alpha > beta) {
+                        return bestMove;
+                    }
+                }
+            }
+            return bestMove;
+        }
 
     }
-     */
+
     public Move getOpponentMove() {
         String strMove;
         Move opponentMove = null;
@@ -333,7 +365,6 @@ public class Board {
         return opponentMove;
     }
 
-    
     //method needs to be finished!!!
     public Double evaluate() {
         Double value;
@@ -345,6 +376,7 @@ public class Board {
 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
+
         return playerScore == 64; //returning false for now until method is finished;
     }
 

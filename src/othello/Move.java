@@ -19,6 +19,7 @@ public class Move {
     int size;
     double value;
     double [][] values;
+    String passMove;
 
     public Move() {
 
@@ -54,16 +55,15 @@ public class Move {
         if (charArray.length == 1) {
             if (charArray[0] == 'B') {
                 this.playerColor = 'B';
-                this.playerColorCell = Cell.BLACK;
-                this.opponentColorCell = Cell.WHITE;
+                //this.playerColorCell = Cell.BLACK;
+                //this.opponentColorCell = Cell.WHITE;
             } else {
                 this.playerColor = 'W';
-                this.playerColorCell = Cell.WHITE;
-                this.opponentColorCell = Cell.BLACK;
+                //this.playerColorCell = Cell.WHITE;
+                //this.opponentColorCell = Cell.BLACK;
             }
-            this.x = 0;
-            this.y = 0;
             this.size = charArray.length;
+            this.passMove = str;
         } else {
             if (charArray[0] == 'B') {
                 this.playerColor = 'B';
@@ -163,9 +163,13 @@ public class Move {
                 break;
 
         }
-        return (playerColor + " " + boardChar + " " + y);
+        if (size == 1){
+            return playerColor + "";
+        }else{
+            return (playerColor + " " + boardChar + " " + y);
+        }
     }
-/*
+
     @Override
     public boolean equals(Object otherParam) {
         Move other = (Move) otherParam;
@@ -179,5 +183,5 @@ public class Move {
         hash = 41 * hash + this.y;
         return hash;
     }
-*/
+
 }

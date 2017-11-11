@@ -35,37 +35,6 @@ public class Board {
 
     }
 
-    /**
-     *
-     */
-    public enum Direction {
-        UP(0, -1),
-        DOWN(0, 1),
-        LEFT(-1, 0),
-        RIGHT(1, 0),
-        UPLEFT(-1, -1),
-        UPRIGHT(1, -1),
-        DOWNLEFT(-1, 1),
-        DOWNRIGHT(1, 1);
-
-        private final int x;
-        private final int y;
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        Direction(int xCord, int yCord) {
-            x = xCord;
-            y = yCord;
-        }
-
-    }
-
     public int playerScore;
     private final int BOARD_SIZE = 10;
     Cell[][] board;
@@ -135,7 +104,7 @@ public class Board {
             return false;
         } else {
             //check in all directions by applying list of moves
-            for (Direction direction : Direction.values()) {
+            for (Directions direction : Directions.values()) {
                 int dirX = direction.getX();
                 int dirY = direction.getY();
                 int jump = 2;
@@ -184,14 +153,7 @@ public class Board {
                 }
             }
         }
-        //return list of legal moves for player
-        /*
-        for (int i = 0; i < validMoves.size(); i++){
-        System.out.println(validMoves.get(i));
-    }
-         */
         return validMoves;
-
     }
 
     //returns updated board if move was to be made
@@ -323,6 +285,36 @@ public class Board {
             return passMove();
         }
     }
+    
+    public Double evaluate(Move move) {
+        Double value = move.getValue();
+        return value; //0
+    }
+
+    public Move getOpponentMove() {
+        String strMove;
+        Move opponentMove = null;
+        ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
+        if (opponentList.isEmpty()) {
+            if (Othello.opponentColor == 'B') {
+                strMove = "B";
+            } else {
+                strMove = "W";
+            }
+            opponentList.add(new Move(strMove));
+        }
+        while (opponentMove == null) {
+            System.out.println("C " + "Enter Opponent Move: ");
+            Scanner opponentScan = new Scanner(System.in);
+            strMove = opponentScan.nextLine();
+            opponentMove = new Move(strMove);
+            if (!opponentList.contains(opponentMove)) {
+                System.out.println("C " + "Invalid Move!");
+                opponentMove = null;
+            }
+        }
+        return opponentMove;
+    }
 
     public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth) {
 
@@ -364,41 +356,9 @@ public class Board {
         }
 
     }
-
-    public Move getOpponentMove() {
-        String strMove;
-        Move opponentMove = null;
-        ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
-        if (opponentList.isEmpty()) {
-            if (Othello.opponentColor == 'B') {
-                strMove = "B";
-            } else {
-                strMove = "W";
-            }
-            opponentList.add(new Move(strMove));
-        }
-        while (opponentMove == null) {
-            System.out.println("C " + "Enter Opponent Move: ");
-            Scanner opponentScan = new Scanner(System.in);
-            strMove = opponentScan.nextLine();
-            opponentMove = new Move(strMove);
-            if (!opponentList.contains(opponentMove)) {
-                System.out.println("C " + "Invalid Move!");
-                opponentMove = null;
-            }
-        }
-        return opponentMove;
-    }
-
-    //method needs to be finished!!!
-    public Double evaluate(Move move) {
-        Double value = move.getValue();
-        return value; //0
-    }
-
+ 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
-
         return playerScore == 64; //returning false for now until method is finished;
     }
 

@@ -18,7 +18,7 @@ public final class Move {
     Cell opponentColorCell;
     int size;
     double value;
-    double [][] values;
+    double[][] values;
     String passMove;
 
     public Move() {
@@ -43,7 +43,7 @@ public final class Move {
         this.y = y;
         this.playerColor = color;
         if (color == 'B') {
-           this.playerColorCell = Cell.BLACK;
+            this.playerColorCell = Cell.BLACK;
             this.opponentColorCell = Cell.WHITE;
         } else {
             this.playerColorCell = Cell.WHITE;
@@ -53,7 +53,7 @@ public final class Move {
 
     public Move(String str) {
         setValue();
-        
+
         char[] charArray = str.toCharArray();
 
         if (charArray.length == 1) {
@@ -78,7 +78,7 @@ public final class Move {
             this.size = charArray.length;
             this.x = Character.getNumericValue(charArray[2]) - 9;
             this.y = Character.getNumericValue(charArray[4]);
-            
+
         }
     }//end Move constructor
 
@@ -110,29 +110,28 @@ public final class Move {
     public Cell getOpponentColorCell() {
         return opponentColorCell;
     }
-    
-    public void setValue(){
-        values = new double [][]{
+
+    public void setValue() {
+        values = new double[][]{
             {-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0},
-            {-1.0, 15.0, -3.0,  1.0,  0.5,  0.5,  1.0, -3.0, 15.0, -1.0},
+            {-1.0, 15.0, -3.0, 1.0, 0.5, 0.5, 1.0, -3.0, 15.0, -1.0},
             {-1.0, -4.0, -2.0, -1.0, -0.5, -0.5, -1.0, -2.0, -4.0, -1.0},
-            {-1.0,  1.5, -1.0,  0.5,  0.0,  0.0,  0.5, -1.0,  1.5, -1.0},
-            {-1.0,  0.5, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.5, -1.0},
-            {-1.0,  0.5, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.5, -1.0},
-            {-1.0,  1.5, -1.0,  0.5,  0.0,  0.0,  0.5, -1.0,  1.5, -1.0},
+            {-1.0, 1.5, -1.0, 0.5, 0.0, 0.0, 0.5, -1.0, 1.5, -1.0},
+            {-1.0, 0.5, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 0.5, -1.0},
+            {-1.0, 0.5, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 0.5, -1.0},
+            {-1.0, 1.5, -1.0, 0.5, 0.0, 0.0, 0.5, -1.0, 1.5, -1.0},
             {-1.0, -4.0, -2.0, -1.0, -0.5, -0.5, -1.0, -2.0, -4.0, -1.0},
-            {-1.0, 15.0, -3.0,  1.0,  0.5,  0.5,  1.0, -3.0, 15.0, -1.0},
-            {-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0},
-        };
+            {-1.0, 15.0, -3.0, 1.0, 0.5, 0.5, 1.0, -3.0, 15.0, -1.0},
+            {-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0},};
     }
-    
-    public double getValue(){
+
+    public double getValue() {
         x = this.getX();
         y = this.getY();
         value = values[y][x];
         return value;
     }
-    
+
     @Override
     public String toString() {
         char boardChar = ' ';
@@ -163,9 +162,9 @@ public final class Move {
                 break;
 
         }
-        if (size == 1){
+        if (size == 1) {
             return playerColor + "";
-        }else{
+        } else {
             return (playerColor + " " + boardChar + " " + y);
         }
     }

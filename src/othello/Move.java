@@ -9,7 +9,7 @@ import othello.Board.Cell;
  *
  * @author Matt Lineback
  */
-public class Move {
+public final class Move {
 
     public int x;
     public int y;
@@ -26,22 +26,24 @@ public class Move {
     }
 
     public Move(char color) {
-
+        setValue();
         this.playerColor = color;
 
     }
 
     public Move(int x, int y) {
+        setValue();
         this.x = x;
         this.y = y;
     }
 
     public Move(char color, int x, int y) {
+        setValue();
         this.x = x;
         this.y = y;
         this.playerColor = color;
         if (color == 'B') {
-            this.playerColorCell = Cell.BLACK;
+           this.playerColorCell = Cell.BLACK;
             this.opponentColorCell = Cell.WHITE;
         } else {
             this.playerColorCell = Cell.WHITE;
@@ -50,17 +52,15 @@ public class Move {
     }
 
     public Move(String str) {
+        setValue();
+        
         char[] charArray = str.toCharArray();
 
         if (charArray.length == 1) {
             if (charArray[0] == 'B') {
                 this.playerColor = 'B';
-                //this.playerColorCell = Cell.BLACK;
-                //this.opponentColorCell = Cell.WHITE;
             } else {
                 this.playerColor = 'W';
-                //this.playerColorCell = Cell.WHITE;
-                //this.opponentColorCell = Cell.BLACK;
             }
             this.size = charArray.length;
             this.passMove = str;
@@ -78,6 +78,7 @@ public class Move {
             this.size = charArray.length;
             this.x = Character.getNumericValue(charArray[2]) - 9;
             this.y = Character.getNumericValue(charArray[4]);
+            
         }
     }//end Move constructor
 
@@ -93,7 +94,7 @@ public class Move {
         return size;
     }
 
-    public char getMyColor() {
+    public char getPlayerColor() {
         return playerColor;
     }
 
@@ -112,18 +113,17 @@ public class Move {
     
     public void setValue(){
         values = new double [][]{
-            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-            {-1, 15, -5, 1.0, .5, .5, 1, -5, 15, -1},
-            {-1, -5, -1, -1, -1, -1, -1, -1, -5, -1},
-            {-1, 1.0, -1, .5, -1, -1, .5, -1, 1, -1},
-            {-1, .5, -1, -1, -1, -1, -1, -1, .5, -1},
-            {-1, .5, -1, -1, -1, -1, -1, -1, .5, -1},
-            {-1, 1.0, -1, .5, -1, -1, .5, -1, 1, -1},
-            {-1, -5, -1, -1, -1, -1, -1, -1, -5, -1},
-            {-1, 15, -5, 1, .5, .5, 1.0, -5, 15, -1},
-            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0},
+            {-1.0, 15.0, -3.0,  1.0,  0.5,  0.5,  1.0, -3.0, 15.0, -1.0},
+            {-1.0, -4.0, -2.0, -1.0, -0.5, -0.5, -1.0, -2.0, -4.0, -1.0},
+            {-1.0,  1.5, -1.0,  0.5,  0.0,  0.0,  0.5, -1.0,  1.5, -1.0},
+            {-1.0,  0.5, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.5, -1.0},
+            {-1.0,  0.5, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0,  0.5, -1.0},
+            {-1.0,  1.5, -1.0,  0.5,  0.0,  0.0,  0.5, -1.0,  1.5, -1.0},
+            {-1.0, -4.0, -2.0, -1.0, -0.5, -0.5, -1.0, -2.0, -4.0, -1.0},
+            {-1.0, 15.0, -3.0,  1.0,  0.5,  0.5,  1.0, -3.0, 15.0, -1.0},
+            {-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0},
         };
-        
     }
     
     public double getValue(){

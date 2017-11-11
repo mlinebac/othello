@@ -13,6 +13,9 @@ import java.util.Scanner;
  */
 public class Board {
 
+    /**
+     *
+     */
     public enum Cell {
         BLACK('B'),
         WHITE('W'),
@@ -32,6 +35,9 @@ public class Board {
 
     }
 
+    /**
+     *
+     */
     public enum Direction {
         UP(0, -1),
         DOWN(0, 1),
@@ -86,26 +92,11 @@ public class Board {
             board[BOARD_SIZE - 1][i] = Cell.BOARDER;
             board[i][BOARD_SIZE - 1] = Cell.BOARDER;
         }
-        /*
-        board = new Cell [][]{
-            {Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY,Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.WHITE, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.WHITE, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.BLACK, Cell.WHITE, Cell.WHITE, Cell.WHITE, Cell.BLACK, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.BLACK, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.EMPTY, Cell.EMPTY, Cell.BLACK, Cell.BLACK, Cell.WHITE, Cell.WHITE, Cell.EMPTY, Cell.EMPTY, Cell.BOARDER},
-            {Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER, Cell.BOARDER},
-            };
-    */
-        
+
         board[4][4] = Cell.WHITE;//opponent as White
         board[5][4] = Cell.BLACK;//me as Black
         board[4][5] = Cell.BLACK; //me as Black
         board[5][5] = Cell.WHITE; //opponent as White
-
     }
 
     //get new version of board by taking old state and applying it to new one
@@ -198,9 +189,9 @@ public class Board {
         for (int i = 0; i < validMoves.size(); i++){
         System.out.println(validMoves.get(i));
     }
-        */
+         */
         return validMoves;
-        
+
     }
 
     //returns updated board if move was to be made
@@ -260,56 +251,89 @@ public class Board {
 
     }
 
-    public Move getMyMove() {
-        //get move for alpha beta evaluation
-        /*
-        double alpha = Double.MIN_VALUE;
-        double beta = Double.MAX_VALUE;
-        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 2);
-        */
-        //pick a random move from my list of valid moves
+    public Move getRandomMove(ArrayList list) {
         Random rand = new Random();
-        ArrayList<Move> myList = generateMoves(Othello.myColor);
+        ArrayList<Move> myList = list;
+
         if (!myList.isEmpty()) {
             int index = rand.nextInt(myList.size());
             return myList.get(index);
         } else {
-            //System.out.println("C No more legal moves");
-            String strMove;
-            if (Othello.myColor == 'B') {
-                strMove = "B";
-            } else {
-                strMove = "W";
-            }
-            // opponentMove = new Move(strMove);
-            //myList.add(new Move(strMove));
-            System.out.println("C This is my Move for passing!!!" + strMove);
-            return new Move(strMove);
+            return passMove();
         }
-         
+    }
+
+    public Move passMove() {
+        String strMove;
+        if (Othello.myColor == 'B') {
+            strMove = "B";
+        } else {
+            strMove = "W";
+        }
+        System.out.println("C This is my Move for passing!!!" + strMove);
+        return new Move(strMove);
+    }
+
+    public Move getMyMove() {
+
+        ArrayList<Move> myList = generateMoves(Othello.myColor);
+
+        //get random move
+        //Move move = getRandomMove(myList);
+        //return move;
+        if (!myList.isEmpty()) {
+            Move move = new Move();
+            Double value = 0.0;
+            for (int i = 0; i < myList.size(); i++) {
+                move = myList.get(i);
+                value = evaluate(move);
+            }
+            if (value == 15.0) {
+                System.out.println("This value is equal to 15 : ");
+                return move;
+            } else if (value == 1.5) {
+                System.out.println("This value is equal to 1.5 : ");
+                return move;
+            } else if (value == 1.0) {
+                System.out.println("This value is equal to 1 : ");
+                return move;
+            } else if (value == 0.5) {
+                System.out.println("This value is equal to 0.5 : ");
+                return move;
+            } else if (value == 0.0) {
+                System.out.println("This value is equal to 0.0 : ");
+                return move;
+            } else if (value == -0.5) {
+                System.out.println("This value is equal to -0.5 : ");
+                return move;
+            } else if (value == -1.0) {
+                System.out.println("This value is equal to -1.0 : ");
+                return move;
+            } else if (value == -2.0) {
+                System.out.println("This value is equal to -2.0 : ");
+                return move;
+            } else if (value == -3.0) {
+                System.out.println("This value is equal to -3.0 : ");
+                return move;
+            } else {
+                System.out.println("This value is equal to -4 : ");
+                return move;
+            }
+        } else {
+            return passMove();
+        }
     }
 
     public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth) {
+
         if (ply >= maxDepth) {
             Move returnMove = new Move();
-            returnMove.value = currentBoard.evaluate();
+            //returnMove.value = currentBoard.evaluate();
+            System.out.println("testing alphaBeta");
+
+            System.out.println("alphaBeta ply>=maxDepth :" + returnMove.toString());
             return returnMove;
         } else {
-            /*
-               1. generate Moves for player
-               2. if MoveList is empty, add passmove to movelist
-               3. bestMove = moveList.get(0)
-               4. for each move in the move list
-                  a.) newBoard = currentBoard.applyMove(player, move)
-                  b.) tempMove = alphaBeta(newBoard, ply+1, -player, -beta, -alpha, maxDepth)
-                  c.) move.value = -tempMove.value;
-                  d.) if moveValue > alpha
-                      c0) bestMove = move
-                      c1) alpha = moveValue
-                      c2) if alpha > beta
-                            return bestMove
-              5.) return bestMove        
-             */
             ArrayList<Move> moves = currentBoard.generateMoves(myColor);
             String strMove;
             if (moves.isEmpty()) {
@@ -335,6 +359,7 @@ public class Board {
                     }
                 }
             }
+            System.out.println("alphaBeta bestmove : " + bestMove.toString());
             return bestMove;
         }
 
@@ -366,11 +391,8 @@ public class Board {
     }
 
     //method needs to be finished!!!
-    public Double evaluate() {
-        Double value;
-        Move move = getMyMove();
-        move.setValue();
-        value = move.getValue();
+    public Double evaluate(Move move) {
+        Double value = move.getValue();
         return value; //0
     }
 

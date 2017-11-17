@@ -34,7 +34,7 @@ public class Board {
         }
 
     }
-    
+
     public int playerScore;
     private final int BOARD_SIZE = 10;
     Cell[][] board;
@@ -47,8 +47,8 @@ public class Board {
 
     //constructor that takes a player color and intiates board with boarders and 
     //players at starting positions
-    public Board(char color){
-        
+    public Board(char color) {
+
         this.board = new Cell[BOARD_SIZE][BOARD_SIZE];
         for (int i = 1; i < BOARD_SIZE - 1; i++) {
             for (int j = 1; j < BOARD_SIZE - 1; j++) {
@@ -237,65 +237,55 @@ public class Board {
     }
 
     public Move getMyMove() {
-        //double alpha = Double.MIN_VALUE;
-        //double beta = Double.MAX_VALUE;
-        //return alphaBeta(this, 0, Othello.myColor, alpha, beta, 2);
-        ArrayList<Move> myList = generateMoves(Othello.myColor);
-        if (!myList.isEmpty()) {
-            return getValue(myList);
-        }else {
-            return passMove();
-        }
-
+        double alpha = Double.MIN_VALUE;
+        double beta = Double.MAX_VALUE;
+        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 4);
     }
-    
+
     public Double evaluate(Move move) {
         Double value = move.getValue();
         return value; //0
     }
-    
-    public Move getValue(ArrayList<Move> moves){
+
+    public Move getValue(ArrayList<Move> moves) {
         double value = 0.0;
         Move move = new Move();
-        ArrayList<Move> moveList;
-        moveList = moves;
         for (int i = 0; i < moves.size(); i++) {
-                move = moves.get(i);
-                value = evaluate(move);
-            }
-            if (value == 15.0) {
-                System.out.println("This value is equal to 15 : ");
-                return move;
-            } else if (value == 1.5) {
-                System.out.println("This value is equal to 1.5 : ");
-                return move;
-            } else if (value == 1.0) {
-                System.out.println("This value is equal to 1 : ");
-                return move;
-            } else if (value == 0.5) {
-                System.out.println("This value is equal to 0.5 : ");
-                return move;
-            } else if (value == 0.0) {
-                System.out.println("This value is equal to 0.0 : ");
-                return move;
-            } else if (value == -0.5) {
-                System.out.println("This value is equal to -0.5 : ");
-                return move;
-            } else if (value == -1.0) {
-                System.out.println("This value is equal to -1.0 : ");
-                return move;
-            } else if (value == -2.0) {
-                System.out.println("This value is equal to -2.0 : ");
-                return move;
-            } else if (value == -3.0) {
-                System.out.println("This value is equal to -3.0 : ");
-                return move;
-            } else {
-                System.out.println("This value is equal to -4 : ");
-                return move;
-            }
+            move = moves.get(i);
+            value = evaluate(move);
         }
-    
+        if (value == 15.0) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == 1.5) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == 1.0) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == 0.5) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == 0.0) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == -0.5) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == -1.0) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == -2.0) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else if (value == -3.0) {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        } else {
+            System.out.println("C " + "This value is equal to " + move.value);
+            return move;
+        }
+    }
 
     public Move getOpponentMove() {
         String strMove;
@@ -323,10 +313,46 @@ public class Board {
     }
 
     public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth) {
-        Move move = new Move();
-        return move;
+        if (ply >= maxDepth) {
+            Move returnMove = new Move();
+            //returnMove.value = currentBoard.evaluate();
+            System.out.println("C " + "testing alphaBeta");
+            System.out.println("C " + "alphaBeta ply>=maxDepth :" + returnMove.toString());
+            return returnMove;
+        } else {
+            ArrayList<Move> myList;
+            if (myColor == Othello.myColor) {
+                myList = generateMoves(Othello.myColor);
+            } else {
+                myList = generateMoves(Othello.opponentColor);
+            }
+            if (!myList.isEmpty()) {
+                getValue(myList);//get value of board location
+            } else {
+                passMove();// if myList is empty pass
+            }
+            Move bestMove = myList.get(0);
+            
+            for (Move move : myList) {
+                Board newBoard = currentBoard.getCopy();
+                newBoard.applyMove(move);//(player, move);
+                //System.out.println(newBoard.toString());//printing out each board to see move made by each player
+                Move tempMove = alphaBeta(newBoard, ply + 1, Othello.opponentColor, -beta, -alpha, maxDepth);
+                move.value = -tempMove.value;
+                if (move.value > alpha) {
+                    bestMove = move;
+                    alpha = move.value;
+                    if (alpha > beta) {
+                        return bestMove;
+                    }
+                }
+            }
+            System.out.println("C"+" alphaBeta bestmove : " + bestMove.toString());
+            return bestMove;
+        }
+
     }
- 
+
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
         return playerScore == 64; //returning false for now until method is finished;

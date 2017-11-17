@@ -34,7 +34,7 @@ public class Board {
         }
 
     }
-
+    
     public int playerScore;
     private final int BOARD_SIZE = 10;
     Cell[][] board;
@@ -47,8 +47,8 @@ public class Board {
 
     //constructor that takes a player color and intiates board with boarders and 
     //players at starting positions
-    public Board(char color) {
-
+    public Board(char color){
+        
         this.board = new Cell[BOARD_SIZE][BOARD_SIZE];
         for (int i = 1; i < BOARD_SIZE - 1; i++) {
             for (int j = 1; j < BOARD_SIZE - 1; j++) {

@@ -237,17 +237,30 @@ public class Board {
     }
 
     public Move getMyMove() {
-
+        //double alpha = Double.MIN_VALUE;
+        //double beta = Double.MAX_VALUE;
+        //return alphaBeta(this, 0, Othello.myColor, alpha, beta, 2);
         ArrayList<Move> myList = generateMoves(Othello.myColor);
-
-        //get random move
-        //Move move = getRandomMove(myList);
-        //return move;
         if (!myList.isEmpty()) {
-            Move move = new Move();
-            Double value = 0.0;
-            for (int i = 0; i < myList.size(); i++) {
-                move = myList.get(i);
+            return getValue(myList);
+        }else {
+            return passMove();
+        }
+
+    }
+    
+    public Double evaluate(Move move) {
+        Double value = move.getValue();
+        return value; //0
+    }
+    
+    public Move getValue(ArrayList<Move> moves){
+        double value = 0.0;
+        Move move = new Move();
+        ArrayList<Move> moveList;
+        moveList = moves;
+        for (int i = 0; i < moves.size(); i++) {
+                move = moves.get(i);
                 value = evaluate(move);
             }
             if (value == 15.0) {
@@ -281,15 +294,8 @@ public class Board {
                 System.out.println("This value is equal to -4 : ");
                 return move;
             }
-        } else {
-            return passMove();
         }
-    }
     
-    public Double evaluate(Move move) {
-        Double value = move.getValue();
-        return value; //0
-    }
 
     public Move getOpponentMove() {
         String strMove;
@@ -317,44 +323,8 @@ public class Board {
     }
 
     public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth) {
-
-        if (ply >= maxDepth) {
-            Move returnMove = new Move();
-            //returnMove.value = currentBoard.evaluate();
-            System.out.println("testing alphaBeta");
-
-            System.out.println("alphaBeta ply>=maxDepth :" + returnMove.toString());
-            return returnMove;
-        } else {
-            ArrayList<Move> moves = currentBoard.generateMoves(myColor);
-            String strMove;
-            if (moves.isEmpty()) {
-                if (Othello.myColor == 'B') {
-                    strMove = "B";
-                } else {
-                    strMove = "W";
-                }
-                moves.add(new Move(strMove)); //add pass move if empty
-            }
-            Move bestMove = moves.get(0);
-            for (Move move : moves) {
-                Board newBoard = currentBoard.getCopy();
-                newBoard.applyMove(move);//(player, move);
-
-                Move tempMove = alphaBeta(newBoard, ply + 1, Othello.opponentColor, -beta, -alpha, maxDepth);
-                move.value = -tempMove.value;
-                if (move.value > alpha) {
-                    bestMove = move;
-                    alpha = move.value;
-                    if (alpha > beta) {
-                        return bestMove;
-                    }
-                }
-            }
-            System.out.println("alphaBeta bestmove : " + bestMove.toString());
-            return bestMove;
-        }
-
+        Move move = new Move();
+        return move;
     }
  
     //evaluate moves and if there is no legal move then the game is over and return true

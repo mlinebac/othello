@@ -26,19 +26,19 @@ public final class Move {
     }
 
     public Move(char color) {
-        setValue();
+        setMoveValues();
         this.playerColor = color;
 
     }
 
     public Move(int x, int y) {
-        setValue();
+        setMoveValues();
         this.x = x;
         this.y = y;
     }
 
     public Move(char color, int x, int y) {
-        setValue();
+        setMoveValues();
         this.x = x;
         this.y = y;
         this.playerColor = color;
@@ -52,7 +52,7 @@ public final class Move {
     }
 
     public Move(String str) {
-        setValue();
+        setMoveValues();
 
         char[] charArray = str.toCharArray();
 
@@ -115,7 +115,7 @@ public final class Move {
         return opponentColorCell;
     }
 
-    public void setValue() {
+    public void setMoveValues() {
         values = new double[][]{
             {-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0},
             {-1.0, 15.0, -3.0, 1.0, 0.5, 0.5, 1.0, -3.0, 15.0, -1.0},
@@ -129,9 +129,12 @@ public final class Move {
             {-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0},};
     }
 
-    public double getValue() {
+    public double getMoveValue() {
         x = this.getX();
         y = this.getY();
+        if(x == 0 && y == 0){
+            return value = 0.0;
+        }
         value = values[y][x];
         return value;
     }

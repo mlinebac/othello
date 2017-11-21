@@ -75,6 +75,14 @@ public class Board {
         return clone;
     }
 
+    public Board boardCopy(Board original){
+        Board copy = new Board();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            System.arraycopy(original.board[i], 0, copy.board[i], 0, BOARD_SIZE);
+        }
+          return copy;
+          
+    }
     //get current state of board and returns it
     public Cell[][] getState() {
         Cell[][] state = new Cell[BOARD_SIZE][BOARD_SIZE];
@@ -221,11 +229,11 @@ public class Board {
             int index = rand.nextInt(myList.size());
             return myList.get(index);
         } else {
-            return passMove();
+            return myPassMove();
         }
     }
 
-    public Move passMove() {
+    public Move myPassMove() {
         String strMove;
         if (Othello.myColor == 'B') {
             strMove = "B";
@@ -236,18 +244,32 @@ public class Board {
         return new Move(strMove);
     }
 
-    public Move getMyMove() {
-        double alpha = Double.MIN_VALUE;
-        double beta = Double.MAX_VALUE;
-        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 4);
+    public Move optPassMove() {
+        String strMove;
+
+        if (Othello.opponentColor == 'B') {
+            strMove = "B";
+        } else {
+            strMove = "W";
+        }
+        System.out.println("C This is opponent Move for passing!!!" + strMove);
+        return new Move(strMove);
     }
 
-    public Double evaluate(Move move) {
-        Double value = move.getValue();
+    public Move getMyMove() {
+        double alpha = Double.NEGATIVE_INFINITY;
+        double beta = Double.MAX_VALUE;
+        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 2);
+        //ArrayList<Move> myList = generateMoves(Othello.myColor);
+        //return getMostValueMove(myList);
+    }
+
+    public double evaluate(Move move) {
+        double value = move.getMoveValue();
         return value; //0
     }
 
-    public Move getValue(ArrayList<Move> moves) {
+    public Move getMostValueMove(ArrayList<Move> moves) {
         double value = 0.0;
         Move move = new Move();
         for (int i = 0; i < moves.size(); i++) {
@@ -255,36 +277,40 @@ public class Board {
             value = evaluate(move);
         }
         if (value == 15.0) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == 1.5) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == 1.0) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == 0.5) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == 0.0) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == -0.5) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == -1.0) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == -2.0) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else if (value == -3.0) {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         } else {
-            System.out.println("C " + "This value is equal to " + move.value);
+            printMoveValue(move);
             return move;
         }
+    }
+
+    public void printMoveValue(Move move) {
+        System.out.println("C " + "This " + move + " is equal to " + move.value);
     }
 
     public Move getOpponentMove() {
@@ -292,12 +318,8 @@ public class Board {
         Move opponentMove = null;
         ArrayList<Move> opponentList = generateMoves(Othello.opponentColor);
         if (opponentList.isEmpty()) {
-            if (Othello.opponentColor == 'B') {
-                strMove = "B";
-            } else {
-                strMove = "W";
-            }
-            opponentList.add(new Move(strMove));
+            opponentMove = optPassMove();
+            opponentList.add(opponentMove);
         }
         while (opponentMove == null) {
             System.out.println("C " + "Enter Opponent Move: ");
@@ -312,43 +334,37 @@ public class Board {
         return opponentMove;
     }
 
-    public Move alphaBeta(Board currentBoard, int ply, char myColor, double alpha, double beta, int maxDepth) {
+    public Move alphaBeta(Board currentBoard, int ply, char playerColor, double alpha, double beta, int maxDepth) {
+        char nextPlayerColor; //alternates color of player
+        if (playerColor == Othello.myColor)
+            nextPlayerColor = Othello.opponentColor;
+        else 
+            nextPlayerColor = Othello.myColor;
         if (ply >= maxDepth) {
             Move returnMove = new Move();
-            //returnMove.value = currentBoard.evaluate();
-            System.out.println("C " + "testing alphaBeta");
-            System.out.println("C " + "alphaBeta ply>=maxDepth :" + returnMove.toString());
+            returnMove.value = returnMove.getMoveValue();//evaluate
             return returnMove;
         } else {
-            ArrayList<Move> myList;
-            if (myColor == Othello.myColor) {
-                myList = generateMoves(Othello.myColor);
-            } else {
-                myList = generateMoves(Othello.opponentColor);
-            }
-            if (!myList.isEmpty()) {
-                getValue(myList);//get value of board location
-            } else {
-                passMove();// if myList is empty pass
-            }
-            Move bestMove = myList.get(0);
-            
-            for (Move move : myList) {
-                Board newBoard = currentBoard.getCopy();
+            ArrayList<Move> moveList = currentBoard.generateMoves(playerColor);
+            //print out moves 
+            moveList.stream().forEach((moves) -> {
+                System.out.println(moves.toString());
+            });
+            Move bestMove = moveList.get(0);
+            for (Move move : moveList) {
+                Board newBoard = boardCopy(currentBoard);
                 newBoard.applyMove(move);//(player, move);
-                //System.out.println(newBoard.toString());//printing out each board to see move made by each player
-                Move tempMove = alphaBeta(newBoard, ply + 1, Othello.opponentColor, -beta, -alpha, maxDepth);
-                move.value = -tempMove.value;
-                if (move.value > alpha) {
+                Move tempMove = alphaBeta(newBoard, ply + 1, nextPlayerColor, -beta, -alpha, maxDepth);
+                move.value = -tempMove.getMoveValue();
+                if (move.getMoveValue() > alpha) {
                     bestMove = move;
-                    alpha = move.value;
+                    alpha = move.getMoveValue();
                     if (alpha > beta) {
-                        return bestMove;
                     }
                 }
             }
-            System.out.println("C"+" alphaBeta bestmove : " + bestMove.toString());
-            return bestMove;
+           return bestMove;
+
         }
 
     }

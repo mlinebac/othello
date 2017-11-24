@@ -4,6 +4,7 @@
 package othello;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -75,14 +76,15 @@ public class Board {
         return clone;
     }
 
-    public Board boardCopy(Board original){
+    public Board boardCopy(Board original) {
         Board copy = new Board();
         for (int i = 0; i < BOARD_SIZE; i++) {
             System.arraycopy(original.board[i], 0, copy.board[i], 0, BOARD_SIZE);
         }
-          return copy;
-          
+        return copy;
+
     }
+
     //get current state of board and returns it
     public Cell[][] getState() {
         Cell[][] state = new Cell[BOARD_SIZE][BOARD_SIZE];
@@ -264,9 +266,60 @@ public class Board {
         //return getMostValueMove(myList);
     }
 
-    public double evaluate(Move move) {
-        double value = move.getMoveValue();
-        return value; //0
+    public double evaluate() {
+
+        double playerScores;
+
+        setPlayerScore(Othello.myColor);
+        int myScore = getPlayerScore();
+        setPlayerScore(Othello.opponentColor);
+        int opponentScore = getPlayerScore();
+
+        if (myScore > opponentScore) {
+            playerScores = (100 * myScore) / (myScore + opponentScore);
+        } else if (myScore < opponentScore) {
+            playerScores = -(100 * opponentScore) / (myScore + opponentScore);
+        } else {
+            playerScores = 0.0;
+        }
+
+        ArrayList<Move> myMoves = generateMoves(Othello.myColor);
+        ArrayList<Move> opponentMoves = generateMoves(Othello.opponentColor);
+        int myMoveSize = myMoves.size();
+        int opponentMoveSize = opponentMoves.size();
+        double numMoves;
+        if (myMoveSize > opponentMoveSize) {
+            numMoves = (100 * myMoveSize) / (myMoveSize + opponentMoveSize);
+        } else if (myMoveSize < opponentMoveSize) {
+            numMoves = -(100 * opponentMoveSize) / (myMoveSize + opponentMoveSize);
+        } else {
+            numMoves = 0;
+        }
+
+        double myCorner = 0.0;
+        double opponentCorner = 0.0;
+        double cornerScore;
+
+        myCorner = myMoves.stream().filter((moves) -> (moves.getMoveValue() == 15)).map((_item) -> 1.0).reduce(myCorner, (accumulator, _item) -> accumulator + 1);
+        opponentCorner = opponentMoves.stream().filter((moves) -> (moves.getMoveValue() == 15)).map((_item) -> 1.0).reduce(opponentCorner, (accumulator, _item) -> accumulator + 1);
+
+        cornerScore = 500 * (100 * myCorner - 100 * opponentCorner);
+        System.out.println(cornerScore);
+        return playerScores + numMoves + cornerScore;
+
+    }
+
+    int numValidMoves(char player, Cell grid) {
+        int count = 0;
+        for (int i = 1; i < BOARD_SIZE; i++) {
+            for (int j = 1; j < BOARD_SIZE; j++) {
+                Move move = new Move(player, i, j);
+                if (isLegalMove(move)) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     public Move getMostValueMove(ArrayList<Move> moves) {
@@ -274,37 +327,27 @@ public class Board {
         Move move = new Move();
         for (int i = 0; i < moves.size(); i++) {
             move = moves.get(i);
-            value = evaluate(move);
+            value = move.getMoveValue();
         }
         if (value == 15.0) {
-            printMoveValue(move);
             return move;
         } else if (value == 1.5) {
-            printMoveValue(move);
             return move;
         } else if (value == 1.0) {
-            printMoveValue(move);
             return move;
         } else if (value == 0.5) {
-            printMoveValue(move);
             return move;
         } else if (value == 0.0) {
-            printMoveValue(move);
             return move;
         } else if (value == -0.5) {
-            printMoveValue(move);
             return move;
         } else if (value == -1.0) {
-            printMoveValue(move);
             return move;
         } else if (value == -2.0) {
-            printMoveValue(move);
             return move;
         } else if (value == -3.0) {
-            printMoveValue(move);
             return move;
         } else {
-            printMoveValue(move);
             return move;
         }
     }
@@ -336,34 +379,47 @@ public class Board {
 
     public Move alphaBeta(Board currentBoard, int ply, char playerColor, double alpha, double beta, int maxDepth) {
         char nextPlayerColor; //alternates color of player
-        if (playerColor == Othello.myColor)
+        if (playerColor == Othello.myColor) {
             nextPlayerColor = Othello.opponentColor;
-        else 
+        } else {
             nextPlayerColor = Othello.myColor;
+        }
+
         if (ply >= maxDepth) {
             Move returnMove = new Move();
-            returnMove.value = returnMove.getMoveValue();//evaluate
+            returnMove.value = currentBoard.evaluate();//evaluate
             return returnMove;
         } else {
+
             ArrayList<Move> moveList = currentBoard.generateMoves(playerColor);
-            //print out moves 
-            moveList.stream().forEach((moves) -> {
-                System.out.println(moves.toString());
-            });
+
+            if (moveList.isEmpty()) {
+                if (playerColor == Othello.myColor) {
+                    moveList.add(myPassMove());
+                } else {
+                    moveList.add(optPassMove());
+                }
+            }
+            //print out moves
+            //moveList.stream().forEach((moves) -> {
+            //System.out.println(moves.toString());
+            //});
             Move bestMove = moveList.get(0);
             for (Move move : moveList) {
                 Board newBoard = boardCopy(currentBoard);
-                newBoard.applyMove(move);//(player, move);
+                newBoard.applyMove(move);
                 Move tempMove = alphaBeta(newBoard, ply + 1, nextPlayerColor, -beta, -alpha, maxDepth);
                 move.value = -tempMove.getMoveValue();
-                if (move.getMoveValue() > alpha) {
+                if (move.value > alpha) {
                     bestMove = move;
-                    alpha = move.getMoveValue();
+                    alpha = move.value;
                     if (alpha > beta) {
+                        return bestMove;
                     }
+
                 }
             }
-           return bestMove;
+            return bestMove;
 
         }
 

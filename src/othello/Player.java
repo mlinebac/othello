@@ -8,7 +8,7 @@ package othello;
  * @author Matt Lineback
  */
 public class Player {
-    
+
     char playerColor;
     char opponentColor;
 

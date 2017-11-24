@@ -15,7 +15,7 @@ public class Othello {
     public final static int OPPONENT = -1;
 
     public static Board gameBoard;
-    public static int currentPlayer;// = int(1,-1);
+    public static int currentPlayer;
     public static char myColor;
     public static char opponentColor;
     public static Player player;
@@ -29,7 +29,7 @@ public class Othello {
         Scanner scan = new Scanner(System.in);
         System.out.println("C " + "Please choose your color");
         String str = scan.nextLine();
-        player = new Player(str);//intialize player I B or I W only!!!
+        player = new Player(str);
         myColor = player.getPlayerColor();
         opponentColor = player.getOpponentColor();
         gameBoard = new Board(myColor);
@@ -72,6 +72,7 @@ public class Othello {
         }//end while loop
         //print out players score when game is over
         gameBoard.printScore(myColor, opponentColor);
+
     }//end main
 
 }

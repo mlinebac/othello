@@ -4,8 +4,6 @@
 package othello;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -14,9 +12,6 @@ import java.util.Scanner;
  */
 public class Board {
 
-    /**
-     *
-     */
     public enum Cell {
         BLACK('B'),
         WHITE('W'),
@@ -69,13 +64,7 @@ public class Board {
         board[5][5] = Cell.WHITE; //opponent as White
     }
 
-    //get new version of board by taking old state and applying it to new one
-    public Board getCopy() {
-        Board clone = new Board();
-        clone.setState(getState());
-        return clone;
-    }
-
+    //get copy of board for alpha beta
     public Board boardCopy(Board original) {
         Board copy = new Board();
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -85,7 +74,14 @@ public class Board {
 
     }
 
-    //get current state of board and returns it
+    //get new version of board by taking old state and applying it to new one
+    public Board getCopy() {
+        Board clone = new Board();
+        clone.setState(getState());
+        return clone;
+    }
+
+    //get current state of board and return it
     public Cell[][] getState() {
         Cell[][] state = new Cell[BOARD_SIZE][BOARD_SIZE];
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -223,18 +219,6 @@ public class Board {
 
     }
 
-    public Move getRandomMove(ArrayList list) {
-        Random rand = new Random();
-        ArrayList<Move> myList = list;
-
-        if (!myList.isEmpty()) {
-            int index = rand.nextInt(myList.size());
-            return myList.get(index);
-        } else {
-            return myPassMove();
-        }
-    }
-
     public Move myPassMove() {
         String strMove;
         if (Othello.myColor == 'B') {
@@ -242,7 +226,6 @@ public class Board {
         } else {
             strMove = "W";
         }
-        System.out.println("C This is my Move for passing!!!" + strMove);
         return new Move(strMove);
     }
 
@@ -254,20 +237,18 @@ public class Board {
         } else {
             strMove = "W";
         }
-        System.out.println("C This is opponent Move for passing!!!" + strMove);
         return new Move(strMove);
     }
 
     public Move getMyMove() {
         double alpha = Double.NEGATIVE_INFINITY;
         double beta = Double.MAX_VALUE;
-        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 2);
-        //ArrayList<Move> myList = generateMoves(Othello.myColor);
-        //return getMostValueMove(myList);
+        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 8);
     }
 
     public double evaluate() {
 
+        //evaluating player scores 
         double playerScores;
 
         setPlayerScore(Othello.myColor);
@@ -283,11 +264,13 @@ public class Board {
             playerScores = 0.0;
         }
 
+        //evaluating number of moves 
         ArrayList<Move> myMoves = generateMoves(Othello.myColor);
         ArrayList<Move> opponentMoves = generateMoves(Othello.opponentColor);
         int myMoveSize = myMoves.size();
         int opponentMoveSize = opponentMoves.size();
         double numMoves;
+
         if (myMoveSize > opponentMoveSize) {
             numMoves = (100 * myMoveSize) / (myMoveSize + opponentMoveSize);
         } else if (myMoveSize < opponentMoveSize) {
@@ -296,6 +279,7 @@ public class Board {
             numMoves = 0;
         }
 
+        //Evaluating corners 
         double myCorner = 0.0;
         double opponentCorner = 0.0;
         double cornerScore;
@@ -304,56 +288,10 @@ public class Board {
         opponentCorner = opponentMoves.stream().filter((moves) -> (moves.getMoveValue() == 15)).map((_item) -> 1.0).reduce(opponentCorner, (accumulator, _item) -> accumulator + 1);
 
         cornerScore = 500 * (100 * myCorner - 100 * opponentCorner);
-        System.out.println(cornerScore);
+
+        //adding up all evaluations 
         return playerScores + numMoves + cornerScore;
 
-    }
-
-    int numValidMoves(char player, Cell grid) {
-        int count = 0;
-        for (int i = 1; i < BOARD_SIZE; i++) {
-            for (int j = 1; j < BOARD_SIZE; j++) {
-                Move move = new Move(player, i, j);
-                if (isLegalMove(move)) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-    public Move getMostValueMove(ArrayList<Move> moves) {
-        double value = 0.0;
-        Move move = new Move();
-        for (int i = 0; i < moves.size(); i++) {
-            move = moves.get(i);
-            value = move.getMoveValue();
-        }
-        if (value == 15.0) {
-            return move;
-        } else if (value == 1.5) {
-            return move;
-        } else if (value == 1.0) {
-            return move;
-        } else if (value == 0.5) {
-            return move;
-        } else if (value == 0.0) {
-            return move;
-        } else if (value == -0.5) {
-            return move;
-        } else if (value == -1.0) {
-            return move;
-        } else if (value == -2.0) {
-            return move;
-        } else if (value == -3.0) {
-            return move;
-        } else {
-            return move;
-        }
-    }
-
-    public void printMoveValue(Move move) {
-        System.out.println("C " + "This " + move + " is equal to " + move.value);
     }
 
     public Move getOpponentMove() {
@@ -400,10 +338,7 @@ public class Board {
                     moveList.add(optPassMove());
                 }
             }
-            //print out moves
-            //moveList.stream().forEach((moves) -> {
-            //System.out.println(moves.toString());
-            //});
+
             Move bestMove = moveList.get(0);
             for (Move move : moveList) {
                 Board newBoard = boardCopy(currentBoard);
@@ -427,7 +362,7 @@ public class Board {
 
     //evaluate moves and if there is no legal move then the game is over and return true
     public boolean gameOver() {
-        return playerScore == 64; //returning false for now until method is finished;
+        return playerScore == 64;
     }
 
     //checks the board and counts num of player pieces on the board and returns count sum;
@@ -460,6 +395,7 @@ public class Board {
 
         setPlayerScore(opponent);
         int opponentScore = getPlayerScore();
+
         System.out.println("C My score is: " + myScore + "\nC Opponent score is: " + opponentScore);
     }
 

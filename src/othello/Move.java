@@ -59,12 +59,8 @@ public final class Move {
         if (charArray.length == 1) {
             if (charArray[0] == 'B') {
                 this.playerColor = 'B';
-                //this.playerColorCell = Cell.BLACK;
-                //this.opponentColorCell = Cell.WHITE;
             } else {
                 this.playerColor = 'W';
-                //this.playerColorCell = Cell.WHITE;
-                //this.opponentColorCell = Cell.BLACK;
             }
             this.size = charArray.length;
             this.passMove = str;
@@ -132,7 +128,7 @@ public final class Move {
     public double getMoveValue() {
         x = this.getX();
         y = this.getY();
-        if(x == 0 && y == 0){
+        if (x == 0 && y == 0) {
             return value = 0.0;
         }
         value = values[y][x];

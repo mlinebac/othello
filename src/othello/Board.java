@@ -218,7 +218,7 @@ public class Board {
         return board[y][x];
 
     }
-
+    //returns string move B or W depending on color picked at begining of game
     public Move myPassMove() {
         String strMove;
         if (Othello.myColor == 'B') {
@@ -228,10 +228,9 @@ public class Board {
         }
         return new Move(strMove);
     }
-
+    //returns string move B or W depending on color picked at begining of game
     public Move optPassMove() {
         String strMove;
-
         if (Othello.opponentColor == 'B') {
             strMove = "B";
         } else {
@@ -239,15 +238,14 @@ public class Board {
         }
         return new Move(strMove);
     }
-
+    //returns computers best move against its component 
     public Move getMyMove() {
         double alpha = Double.NEGATIVE_INFINITY;
         double beta = Double.MAX_VALUE;
-        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 8);
+        return alphaBeta(this, 0, Othello.myColor, alpha, beta, 6);
     }
-
+    //evaluates board and calculates heuristic 
     public double evaluate() {
-
         //evaluating player scores 
         double playerScores;
 
@@ -314,7 +312,7 @@ public class Board {
         }
         return opponentMove;
     }
-
+    //returns best move using alpha beta pruning 
     public Move alphaBeta(Board currentBoard, int ply, char playerColor, double alpha, double beta, int maxDepth) {
         char nextPlayerColor; //alternates color of player
         if (playerColor == Othello.myColor) {

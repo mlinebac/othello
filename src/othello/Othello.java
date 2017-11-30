@@ -1,6 +1,4 @@
-/*
- * 
- */
+
 package othello;
 
 import java.util.Scanner;
@@ -13,7 +11,6 @@ public class Othello {
 
     public final static int ME = 1;
     public final static int OPPONENT = -1;
-
     public static Board gameBoard;
     public static int currentPlayer;
     public static char myColor;

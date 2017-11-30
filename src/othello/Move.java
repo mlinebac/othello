@@ -171,7 +171,7 @@ public final class Move {
             return (playerColor + " " + boardChar + " " + y);
         }
     }
-
+    //code below was provided by Dr. Mec
     @Override
     public boolean equals(Object otherParam) {
         Move other = (Move) otherParam;
